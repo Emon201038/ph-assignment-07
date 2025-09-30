@@ -1,0 +1,132 @@
+[
+  {
+    "id": 1,
+    "title": "Sports Scoreboard Management",
+    "description": "A dynamic match scoreboard application built with NextJS, Express, GraphQL, Mongodb, SocketIO. Features real-time score tracking and management and players stats management.",
+    "image": "/images/mycric.png",
+    "tags": [
+      "NextJS",
+      "Redux",
+      "Tailwind CSS",
+      "Express",
+      "MongoDB",
+      "SocketIO"
+    ],
+    "github": "#",
+    "live": "https://mycric.app",
+    "featured": true,
+    "details": {
+      "techStack": [
+        "NextJS",
+        "Express",
+        "GraphQL",
+        "MongoDB",
+        "SocketIO",
+        "Redux",
+        "Tailwind CSS"
+      ],
+      "features": [
+        "Real-time score tracking",
+        "Player stats management",
+        "Admin dashboard",
+        "Responsive UI"
+      ],
+      "role": "Full Stack Developer",
+      "duration": "Jan 2024 - Mar 2024"
+    }
+  },
+  {
+    "id": 2,
+    "title": "MERN E-Commerce Platform",
+    "description": "A full-stack e-commerce solution built with MERN stack. Features include user authentication, shopping cart, payment processing, and admin dashboard. This project showcases modern web development practices.",
+    "image": "/api/placeholder/600/400",
+    "tags": ["React", "Node.js", "MongoDB", "TypeScript"],
+    "github": "https://github.com/emon201038/MERN-ecommerce",
+    "live": "#",
+    "featured": false,
+    "details": {
+      "techStack": ["MongoDB", "Express", "React", "Node.js", "TypeScript"],
+      "features": [
+        "User authentication",
+        "Shopping cart",
+        "Payment integration",
+        "Admin dashboard"
+      ],
+      "role": "Lead Developer",
+      "duration": "Feb 2024 - Apr 2024"
+    }
+  },
+  {
+    "id": 3,
+    "title": "Book Store Application",
+    "description": "A comprehensive book store management system with both client and server components. Built with modern JavaScript frameworks and includes features for browsing, purchasing, and managing books.",
+    "image": "/images/library.png",
+    "tags": ["JavaScript", "React", "Node.js", "Express"],
+    "github": "https://github.com/emon201038/book-store-client",
+    "live": "#",
+    "featured": true,
+    "details": {
+      "techStack": ["React", "Node.js", "Express", "MongoDB"],
+      "features": [
+        "Book browsing",
+        "Purchase management",
+        "Inventory control",
+        "User reviews"
+      ],
+      "role": "Frontend Developer",
+      "duration": "Mar 2024 - May 2024"
+    }
+  },
+  {
+    "id": 4,
+    "title": "Travel Booking System",
+    "description": "A beginner-level travel booking application built with React and Redux. Features seat booking for up to 3 travelers with add/delete functionality and modern UI design.",
+    "image": "/api/placeholder/600/400",
+    "tags": ["React", "Redux", "Tailwind CSS", "JavaScript"],
+    "github": "https://github.com/emon201038/travel-booking",
+    "live": "#",
+    "featured": false,
+    "details": {
+      "techStack": ["React", "Redux", "Tailwind CSS"],
+      "features": ["Seat booking", "Add/delete travelers", "Responsive design"],
+      "role": "Frontend Developer",
+      "duration": "Apr 2024"
+    }
+  },
+  {
+    "id": 5,
+    "title": "Shopping Cart Handler",
+    "description": "A responsive shopping cart management system built with React.js, Redux, and Tailwind CSS. Features include adding/removing items, quantity management, and price calculations.",
+    "image": "/api/placeholder/600/400",
+    "tags": ["React", "Redux", "Tailwind CSS", "JavaScript"],
+    "github": "https://github.com/emon201038/shoping-cart",
+    "live": "#",
+    "featured": false,
+    "details": {
+      "techStack": ["React", "Redux", "Tailwind CSS"],
+      "features": [
+        "Add/remove items",
+        "Quantity management",
+        "Price calculation"
+      ],
+      "role": "Frontend Developer",
+      "duration": "May 2024"
+    }
+  },
+  {
+    "id": 6,
+    "title": "Portfolio Website",
+    "description": "This very portfolio website you're viewing! Built with Next.js, featuring smooth animations, dark mode support, and a functional contact form.",
+    "image": "/api/placeholder/600/400",
+    "tags": ["Next.js", "Framer Motion", "Tailwind CSS", "TypeScript"],
+    "github": "https://github.com/emon201038/portfolio2",
+    "live": "#",
+    "featured": false,
+    "details": {
+      "techStack": ["Next.js", "Framer Motion", "Tailwind CSS", "TypeScript"],
+      "features": ["Smooth animations", "Dark mode", "Contact form"],
+      "role": "Full Stack Developer",
+      "duration": "June 2024"
+    }
+  }
+]
