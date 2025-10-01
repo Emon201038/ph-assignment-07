@@ -6,6 +6,7 @@ interface IEnvVars {
     SUPER_ADMIN_NAME:string;
     SUPER_ADMIN_EMAIL: string,
     SUPER_ADMIN_PASSWORD: string
+    JWT_SECRET: string
 };
 
 const loadEnv = ():IEnvVars =>{
@@ -14,7 +15,8 @@ const loadEnv = ():IEnvVars =>{
         "DB_URL",
         "SUPER_ADMIN_NAME",
         "SUPER_ADMIN_EMAIL",
-        "SUPER_ADMIN_PASSWORD"
+        "SUPER_ADMIN_PASSWORD",
+        "JWT_SECRET"
     ];
 
     requiredEnv.forEach((envVar) => {
@@ -29,6 +31,7 @@ const loadEnv = ():IEnvVars =>{
         SUPER_ADMIN_NAME: process.env.SUPER_ADMIN_NAME as string,
         SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL as string,
         SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD as string,
+        JWT_SECRET: process.env.JWT_SECRET as string
 
     }
 };

@@ -2,6 +2,7 @@ import express from "express";
 import userRouter from "../modules/user/user.routes";
 import projectRouter from "../modules/project/project.routes";
 import blogRouter from "../modules/blog/blog.routes";
+import authRouter from "../modules/auth/auth.routes";
 
 const router = express.Router()
 const routes = [
@@ -16,6 +17,10 @@ const routes = [
     {
         path:"/blog",
         route: blogRouter
+    },
+    {
+        path:"/auth",
+        route: authRouter
     },
 ];
 routes.forEach(r=>{
