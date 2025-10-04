@@ -1,11 +1,16 @@
-import express from "express"
+import express from "express";
 import { AuthController } from "./auth.controller";
 import { checkAuth } from "../../middlewares/checkAuth";
 import { UserRole } from "../user/user.interface";
 
-const authRouter = express.Router()
+const authRouter = express.Router();
 
-authRouter.post("/login",AuthController.login);
-authRouter.get("/me",checkAuth(UserRole.SUPER_ADMIN,UserRole.ADMIN),AuthController.me)
+authRouter.post("/login", AuthController.login);
+authRouter.post("/logout", AuthController.logout);
+authRouter.get(
+  "/me",
+  checkAuth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+  AuthController.me
+);
 
-export default authRouter
+export default authRouter;

@@ -6,8 +6,10 @@ import { Menu, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { ModeToggle } from "./theme-toggle";
 import Link from "next/link";
+import AuthProvider from "@/providers/auth-provider";
+import AuthButton from "./AuthButton";
 
-const scrollToHash = (hash: string) => {
+export const scrollToHash = (hash: string) => {
   const element = document.querySelector(hash);
   if (element) {
     element.scrollIntoView({ behavior: "smooth" });

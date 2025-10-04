@@ -17,3 +17,18 @@ export interface IProject {
     duration: string;
   };
 }
+
+export interface IUser {
+  _id: string;
+  name: string;
+  role: UserRole;
+  email: string;
+}
+
+export enum UserRole {
+  USER = "USER",
+  ADMIN = "ADMIN",
+  SUPER_ADMIN = "SUPER_ADMIN",
+}
+
+export type SessionStatus = "loading" | "authenticated" | "unauthenticated";
