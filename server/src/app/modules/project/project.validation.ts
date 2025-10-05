@@ -4,7 +4,6 @@ export const createProjectSchema = z.object({
   description: z
     .string()
     .min(2, { error: "Description should be minimum 2 charecters" }),
-  image: z.instanceof(File, { error: "Image is required" }),
   github: z
     .string()
     .url()
@@ -24,6 +23,12 @@ export const createProjectSchema = z.object({
       .string()
       .min(1, { error: "At least one tech stack is required" }),
     status: z.enum(["active", "draft", "archived"]).default("active"),
+    image: z
+      .object({
+        url: z.string().url().optional(),
+        pub_id: z.string().optional(),
+      })
+      .optional(),
   }),
   featured: z.boolean().default(false),
 });

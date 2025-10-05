@@ -17,8 +17,13 @@ export interface IDetails {
   features: string[];
   role: string;
   duration: {
-    from: Date;
-    to: Date;
+    start: Date;
+    end: Date;
   };
   status: "active" | "draft" | "archived";
+
+  image: {
+    url: string;
+    public_id: string;
+  };
 }

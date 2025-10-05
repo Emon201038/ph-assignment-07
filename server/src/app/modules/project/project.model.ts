@@ -4,8 +4,8 @@ import { IDetails, IProject } from "./project.interface";
 const detailsSchema = new Schema<IDetails>(
   {
     duration: {
-      from: Date,
-      to: Date,
+      start: Date,
+      end: Date,
     },
     features: [String],
     role: String,
@@ -14,6 +14,11 @@ const detailsSchema = new Schema<IDetails>(
       type: String,
       enum: ["active", "draft", "archived"],
       default: "active",
+    },
+
+    image: {
+      url: String,
+      public_id: String,
     },
   },
   {
@@ -40,6 +45,8 @@ const projectSchema = new Schema<IProject>(
       default: false,
     },
     details: detailsSchema,
+    github: String,
+    live: String,
   },
   {
     timestamps: true,

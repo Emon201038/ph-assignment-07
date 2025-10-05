@@ -26,12 +26,23 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "./ui/form";
 import { TagsInput } from "./ui/tags-input";
+import { Editor } from "./editor";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { fi } from "zod/v4/locales";
+import { Switch } from "./ui/switch";
 
 export function CreateProjectDialog() {
   const [open, setOpen] = useState(false);
@@ -43,53 +54,29 @@ export function CreateProjectDialog() {
       title: "",
       description: "",
       image: undefined,
-      tags: [""],
       github: "",
       live: "",
       details: {
-        duration: "",
-        features: [""],
+        duration: {
+          start: new Date().toISOString().split("T")[0],
+          end: new Date().toISOString().split("T")[0],
+        },
+        features: "",
         role: "",
-        techStack: [],
+        techStack: "",
         status: "active",
       },
       featured: false,
     },
   });
 
-  // const {
-  //   fields: tagFields,
-  //   append: appendTag,
-  //   remove: removeTag,
-  // } = useFieldArray({
-  //   name: "tags",
-  // });
-
-  // const {
-  //   fields: featureFields,
-  //   append: appendFeature,
-  //   remove: removeFeature,
-  // } = useFieldArray({
-  //   name: "details.features",
-  // });
-
-  // const handleAddTag = () => {
-  //   const trimmed = tagInput.trim();
-  //   if (trimmed && !tagFields.some((t) => t.id === trimmed)) {
-  //     appendTag(trimmed);
-  //     setTagInput("");
-  //   }
-  // };
-
-  // const handleRemoveTag = (index: number) => {
-  //   removeTag(index);
-  // };
-
   const handleSubmit = (value: CreateProjectSchemaType) => {
     // Handle project creation logic here
-    console.log("[v0] Project created");
+    console.log("[v0] Project created", value);
     setOpen(false);
   };
+
+  console.log(form.formState.errors);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -131,10 +118,15 @@ export function CreateProjectDialog() {
               render={({ field }) => (
                 <FormItem className="space-y-2">
                   <FormLabel>Description</FormLabel>
-                  <FormControl>
+                  <FormControl className="">
+                    {/* <Editor
+                      placeholder="A brief description of the project..."
+                      {...field}
+                      value={field.value || ""}
+                      onChange={(e) => console.log(e)}
+                    /> */}
                     <Textarea
-                      placeholder="A brief description of your project..."
-                      className="min-h-[100px] resize-none"
+                      placeholder="A brief description of the project..."
                       {...field}
                     />
                   </FormControl>
@@ -143,20 +135,28 @@ export function CreateProjectDialog() {
               )}
             />
 
-            <div className="space-y-2">
-              <Label htmlFor="image">Project Image</Label>
-              <div className="flex items-center gap-4">
-                <Input
-                  id="image"
-                  type="file"
-                  accept="image/*"
-                  className="flex-1"
-                />
-                <Button type="button" variant="outline" size="icon">
-                  <Upload className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
+            <FormField
+              name="image"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel>Project Image</FormLabel>
+                  <div className="flex items-center gap-4">
+                    <Input
+                      id="image"
+                      type="file"
+                      accept="image/*"
+                      className="flex-1"
+                      onChange={(e) => field.onChange(e.target.files?.[0])}
+                    />
+                    <Button type="button" variant="outline" size="icon">
+                      <Upload className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               name="live"
@@ -193,17 +193,15 @@ export function CreateProjectDialog() {
               )}
             />
             <FormField
-              name="tags"
+              name="details.techStack"
               control={form.control}
               render={({ field }) => (
                 <FormItem className="space-y-2">
-                  <FormLabel>Tags</FormLabel>
+                  <FormLabel>Tech Stack</FormLabel>
                   <FormControl>
-                    <TagsInput
+                    <Input
                       placeholder="React, Next.js, TailwindCSS"
-                      onValueChange={field.onChange}
                       {...field}
-                      value={field.value}
                     />
                   </FormControl>
                   <FormMessage />
@@ -211,56 +209,114 @@ export function CreateProjectDialog() {
               )}
             />
 
-            {/* <div className="space-y-2">
-              <Label htmlFor="tags">Technologies</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="tags"
-                  placeholder="Add a technology (e.g., React, Next.js)"
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      handleAddTag();
-                    }
-                  }}
-                />
-                <Button type="button" onClick={handleAddTag} variant="outline">
-                  Add
-                </Button>
-              </div>
-
-              {tagFields.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {tagFields.map((field, index) => (
-                    <Badge key={field.id} variant="secondary" className="gap-1">
-                      {field.id}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveTag(index)}
-                        className="ml-1 hover:text-destructive"
+            <FormField
+              name="details.status"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel>Status</FormLabel>
+                  <Select>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
                       >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </Badge>
-                  ))}
-                </div>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="active">Active</SelectItem>
+                          <SelectItem value="draft">Draft</SelectItem>
+                          <SelectItem value="archived">Archived</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
               )}
-            </div> */}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="status">Status</Label>
-              <select
-                id="status"
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                required
-              >
-                <option value="active">Active</option>
-                <option value="draft">Draft</option>
-                <option value="archived">Archived</option>
-              </select>
+            <div className="flex gap-4">
+              <FormField
+                name="details.duration.start"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className="space-y-2 w-full">
+                    <FormLabel>Project Duration</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="details.duration.end"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className="space-y-2 w-full">
+                    <FormLabel>Project Duration</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
+
+            <FormField
+              name="details.role"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel>Role</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Your Role" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="details.features"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel>Features</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Dashboard Included, User Role Management"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="featured"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                  <div className="space-y-0.5">
+                    <FormLabel>Marketing emails</FormLabel>
+                    <FormDescription>
+                      Receive emails about new products, features, and more.
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
 
             <div className="flex justify-end gap-3 pt-4">
               <Button

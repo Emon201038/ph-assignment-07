@@ -85,6 +85,17 @@ body {
   }
 }
 
+/* .ql-container {
+  height: auto;
+}
+
+.ql-toolbar {
+  height: auto;
+}
+.ql-editor {
+  height: auto;
+} */
+
 :root {
   --radius: 0.65rem;
   --background: oklch(1 0 0);

@@ -1,15 +1,18 @@
 import express from "express";
-import { sendResponse } from "../../utils/sendResponse";
-import Project from "./project.model";
+import { ProjectController } from "./project.controller";
+import { validateRequest } from "../../middlewares/validateRequest";
+import { createProjectSchema } from "./project.validation";
+import { uploadProjectImage } from "../../middlewares/uploadFile";
 
 const projectRouter = express.Router();
 
-projectRouter.get("/",async(_req,res,_next)=>{
-    sendResponse(res,{
-        statusCode:200,
-        message: "Project",
-        data: await Project.find()
-    })
-})
+projectRouter
+  .route("/")
+  .get(ProjectController.getAllProjects)
+  .post(
+    uploadProjectImage.single("image"),
+    validateRequest(createProjectSchema),
+    ProjectController.createProject
+  );
 
-export default projectRouter
+export default projectRouter;
