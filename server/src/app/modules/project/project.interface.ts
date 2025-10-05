@@ -1,23 +1,24 @@
-import { Document } from "mongoose"
+import { Document } from "mongoose";
 
 export interface IProject extends Document {
-  id: number
-  title: string
-  description: string
-  image: string
-  tags: string[]
-  github: string
-  live: string
-  featured: boolean
-  details: IDetails
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  tags: string[];
+  github: string;
+  live: string;
+  featured: boolean;
+  details: IDetails;
 }
 
 export interface IDetails {
-  techStack: string[]
-  features: string[]
-  role: string
+  techStack: string[];
+  features: string[];
+  role: string;
   duration: {
-    from: Date,
-    to: Date
-  }
+    from: Date;
+    to: Date;
+  };
+  status: "active" | "draft" | "archived";
 }
