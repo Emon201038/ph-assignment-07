@@ -1,28 +1,31 @@
-import { Server } from "http";
+// import { Server } from "http";
 import { connectDB } from "./app/config/db";
 import app from "./app";
-import { envVars } from "./app/config/env";
+// import { envVars } from "./app/config/env";
 import { seedAdmin } from "./app/utils/seedAdmin";
 
 // let server: Server;
 
-const startServer = async () => {
-  try {
-    await connectDB();
-    await seedAdmin();
+connectDB().then(() => seedAdmin());
+export default app;
 
-    app.listen(envVars.PORT, () => {
-      console.log(`Server is running on port ${envVars.PORT}`);
-    });
-  } catch (error) {
-    console.log(error);
-    process.exit(1);
-  }
-};
+// const startServer = async () => {
+//   try {
+//     await connectDB();
+//     await seedAdmin();
 
-(async () => {
-  await startServer();
-})();
+//     app.listen(envVars.PORT, () => {
+//       console.log(`Server is running on port ${envVars.PORT}`);
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     process.exit(1);
+//   }
+// };
+
+// (async () => {
+//   await startServer();
+// })();
 
 // process.on("unhandledRejection", (error) => {
 //   if (server) {

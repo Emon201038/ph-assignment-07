@@ -1,38 +1,31 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// import { Server } from "http";
 const db_1 = require("./app/config/db");
 const app_1 = __importDefault(require("./app"));
-const env_1 = require("./app/config/env");
+// import { envVars } from "./app/config/env";
 const seedAdmin_1 = require("./app/utils/seedAdmin");
 // let server: Server;
-const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        yield (0, db_1.connectDB)();
-        yield (0, seedAdmin_1.seedAdmin)();
-        app_1.default.listen(env_1.envVars.PORT, () => {
-            console.log(`Server is running on port ${env_1.envVars.PORT}`);
-        });
-    }
-    catch (error) {
-        console.log(error);
-        process.exit(1);
-    }
-});
-(() => __awaiter(void 0, void 0, void 0, function* () {
-    yield startServer();
-}))();
+(0, db_1.connectDB)().then(() => (0, seedAdmin_1.seedAdmin)());
+exports.default = app_1.default;
+// const startServer = async () => {
+//   try {
+//     await connectDB();
+//     await seedAdmin();
+//     app.listen(envVars.PORT, () => {
+//       console.log(`Server is running on port ${envVars.PORT}`);
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     process.exit(1);
+//   }
+// };
+// (async () => {
+//   await startServer();
+// })();
 // process.on("unhandledRejection", (error) => {
 //   if (server) {
 //     server.close(() => {
