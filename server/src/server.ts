@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Server } from "http";
 import { connectDB } from "./app/config/db";
 import app from "./app";
@@ -10,7 +9,7 @@ let server: Server;
 const startServer = async () => {
   try {
     await connectDB();
-    await seedAdmin()
+    await seedAdmin();
 
     server = app.listen(envVars.PORT, () => {
       console.log(`Server is running on port ${envVars.PORT}`);
@@ -60,3 +59,5 @@ process.on("SIGINT", () => {
     server.close();
   }
 });
+
+export default app;
