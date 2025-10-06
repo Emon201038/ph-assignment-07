@@ -32,17 +32,16 @@ export function ProjectDetails({ project }: { project: IProject }) {
           {project.description}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-          {project.github.map((stack) => (
+          {project.github && (
             <div
-              key={stack.name}
-              onClick={() => window.open(stack.url, "_blank")}
+              onClick={() => window.open(project.github, "_blank")}
               rel="noopener noreferrer"
               className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors duration-200 flex items-center justify-center gap-1 cursor-pointer"
             >
               <Github size={20} />
-              <p> {stack.name}</p>
+              <p> Source code</p>
             </div>
-          ))}
+          )}
           {project.live !== "#" && (
             <div
               onClick={() => window.open(project.live, "_blank")}
@@ -63,7 +62,7 @@ export function ProjectDetails({ project }: { project: IProject }) {
           <Card className="overflow-hidden">
             <div className="aspect-video relative">
               <Image
-                src={project.image || "/placeholder.svg"}
+                src={project.details.image.url || "/placeholder.svg"}
                 alt={project.title}
                 fill
                 className="object-cover"
@@ -171,17 +170,16 @@ export function ProjectDetails({ project }: { project: IProject }) {
       <div className="mt-16 text-center">
         <Separator className="mb-8" />
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          {project.github.map((stack) => (
+          {project.github && (
             <div
-              key={stack.name}
-              onClick={() => window.open(stack.url, "_blank")}
+              onClick={() => window.open(project.github, "_blank")}
               rel="noopener noreferrer"
               className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors duration-200 flex items-center justify-center gap-1 cursor-pointer"
             >
               <Github size={20} />
-              <p> {stack.name}</p>
+              <p> Source code</p>
             </div>
-          ))}
+          )}
           {project.live !== "#" && (
             <div
               onClick={() => window.open(project.live, "_blank")}

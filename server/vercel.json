@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "emon's-portfolio",
+  "name": "emon-portfolio",
   "builds": [
     {
       "src": "dist/server.js",

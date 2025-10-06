@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeClosed } from "lucide-react";
 import { useSession } from "@/providers/auth-provider";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const serverUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -19,7 +19,7 @@ export function LoginForm() {
 
   const session = useSession();
   const router = useRouter();
-  const params = useSearchParams();
+  // const params = useSearchParams();
 
   console.log(session, "session");
 
@@ -38,7 +38,7 @@ export function LoginForm() {
     const data = await res.json();
     if (data?.data?.token) {
       session?.setSession?.({ status: "authenticated", data: data?.data });
-      const redirectUrl = params.get("redirect") || "/dashboard";
+      const redirectUrl = "/dashboard";
       router.push(redirectUrl);
     }
   };

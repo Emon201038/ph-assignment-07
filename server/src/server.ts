@@ -4,14 +4,14 @@ import app from "./app";
 import { envVars } from "./app/config/env";
 import { seedAdmin } from "./app/utils/seedAdmin";
 
-let server: Server;
+// let server: Server;
 
 const startServer = async () => {
   try {
     await connectDB();
     await seedAdmin();
 
-    server = app.listen(envVars.PORT, () => {
+    app.listen(envVars.PORT, () => {
       console.log(`Server is running on port ${envVars.PORT}`);
     });
   } catch (error) {
@@ -24,40 +24,40 @@ const startServer = async () => {
   await startServer();
 })();
 
-process.on("unhandledRejection", (error) => {
-  if (server) {
-    server.close(() => {
-      console.error(error);
-      process.exit(1);
-    });
-  } else {
-    process.exit(1);
-  }
-});
+// process.on("unhandledRejection", (error) => {
+//   if (server) {
+//     server.close(() => {
+//       console.error(error);
+//       process.exit(1);
+//     });
+//   } else {
+//     process.exit(1);
+//   }
+// });
 
-process.on("uncaughtException", (error) => {
-  if (server) {
-    server.close(() => {
-      console.error(error);
-      process.exit(1);
-    });
-  } else {
-    process.exit(1);
-  }
-});
+// process.on("uncaughtException", (error) => {
+//   if (server) {
+//     server.close(() => {
+//       console.error(error);
+//       process.exit(1);
+//     });
+//   } else {
+//     process.exit(1);
+//   }
+// });
 
-process.on("SIGTERM", () => {
-  console.log("SIGTERM received");
-  if (server) {
-    server.close();
-  }
-});
+// process.on("SIGTERM", () => {
+//   console.log("SIGTERM received");
+//   if (server) {
+//     server.close();
+//   }
+// });
 
-process.on("SIGINT", () => {
-  console.log("SIGINT received");
-  if (server) {
-    server.close();
-  }
-});
+// process.on("SIGINT", () => {
+//   console.log("SIGINT received");
+//   if (server) {
+//     server.close();
+//   }
+// });
 
-export default app;
+// export default app;

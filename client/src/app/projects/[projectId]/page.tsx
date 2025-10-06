@@ -1,5 +1,6 @@
 import { ProjectDetails } from "@/components/project-details";
 import { projectsData } from "@/lib/projects-data";
+import { IProject } from "@/types";
 import { notFound } from "next/navigation";
 
 interface ProjectPageProps {
@@ -8,7 +9,7 @@ interface ProjectPageProps {
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { projectId } = await params;
-  const project = projectsData.find((p) => p.id == Number(projectId));
+  let project: IProject | undefined;
 
   if (!project) {
     notFound();

@@ -1,7 +1,9 @@
 export const projectsData = [
   {
     id: 1,
+    _id: "1",
     title: "Sports Scoreboard Management",
+    slug: "mycric",
     description:
       "A dynamic match scoreboard application built with NextJS, Express, GraphQL, Mongodb, SocketIO. Features real-time score tracking and management and players stats management.",
     image: "/images/mycric.png",
@@ -31,7 +33,9 @@ export const projectsData = [
   },
   {
     id: 2,
+    _id: "2",
     title: "Parcel Delivery Management System",
+    slug: "parcel-delivery-system",
     description:
       "A full-stack delivery management system built with MERN stack. Features include user authentication, order management, and real-time tracking. This project showcases modern web development practices.",
     image: "/images/project-1.png",
@@ -63,7 +67,9 @@ export const projectsData = [
   },
   {
     id: 3,
+    _id: "3",
     title: "Book Store Application",
+    slug: "library-management",
     description:
       "A comprehensive book store management system with both client and server components. Built with modern JavaScript frameworks and includes features for browsing, purchasing, and managing books.",
     image: "/images/library.png",

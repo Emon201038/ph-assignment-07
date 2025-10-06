@@ -16,12 +16,12 @@ const db_1 = require("./app/config/db");
 const app_1 = __importDefault(require("./app"));
 const env_1 = require("./app/config/env");
 const seedAdmin_1 = require("./app/utils/seedAdmin");
-let server;
+// let server: Server;
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, db_1.connectDB)();
         yield (0, seedAdmin_1.seedAdmin)();
-        server = app_1.default.listen(env_1.envVars.PORT, () => {
+        app_1.default.listen(env_1.envVars.PORT, () => {
             console.log(`Server is running on port ${env_1.envVars.PORT}`);
         });
     }
@@ -33,37 +33,36 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
 (() => __awaiter(void 0, void 0, void 0, function* () {
     yield startServer();
 }))();
-process.on("unhandledRejection", (error) => {
-    if (server) {
-        server.close(() => {
-            console.error(error);
-            process.exit(1);
-        });
-    }
-    else {
-        process.exit(1);
-    }
-});
-process.on("uncaughtException", (error) => {
-    if (server) {
-        server.close(() => {
-            console.error(error);
-            process.exit(1);
-        });
-    }
-    else {
-        process.exit(1);
-    }
-});
-process.on("SIGTERM", () => {
-    console.log("SIGTERM received");
-    if (server) {
-        server.close();
-    }
-});
-process.on("SIGINT", () => {
-    console.log("SIGINT received");
-    if (server) {
-        server.close();
-    }
-});
+// process.on("unhandledRejection", (error) => {
+//   if (server) {
+//     server.close(() => {
+//       console.error(error);
+//       process.exit(1);
+//     });
+//   } else {
+//     process.exit(1);
+//   }
+// });
+// process.on("uncaughtException", (error) => {
+//   if (server) {
+//     server.close(() => {
+//       console.error(error);
+//       process.exit(1);
+//     });
+//   } else {
+//     process.exit(1);
+//   }
+// });
+// process.on("SIGTERM", () => {
+//   console.log("SIGTERM received");
+//   if (server) {
+//     server.close();
+//   }
+// });
+// process.on("SIGINT", () => {
+//   console.log("SIGINT received");
+//   if (server) {
+//     server.close();
+//   }
+// });
+// export default app;

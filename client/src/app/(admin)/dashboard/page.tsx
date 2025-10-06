@@ -26,7 +26,7 @@ export default async function DashboardPage() {
               Welcome back, Alex
             </h1>
             <p className="mt-2 text-muted-foreground text-pretty">
-              Here's what's happening with your portfolio today
+              Here&apos;s what&apos;s happening with your portfolio today
             </p>
           </div>
           <div className="flex gap-3">
