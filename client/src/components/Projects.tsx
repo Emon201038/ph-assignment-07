@@ -3,11 +3,11 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Github } from "lucide-react";
-import { projectsData as projects } from "../lib/projects-data";
 import Link from "next/link";
 import ProjectCard from "./project-card";
+import { IProject } from "@/types";
 
-const Projects = () => {
+const Projects = ({ projects = [] }: { projects: IProject[] }) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -34,19 +34,29 @@ const Projects = () => {
 
         {/* Featured Projects */}
         <div className="mb-16">
-          <motion.h3
-            initial={{ opacity: 0, x: -50 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-2xl font-bold text-gray-900 dark:text-white mb-8"
-          >
-            Featured Work
-          </motion.h3>
+          <div className="w-full flex justify-between items-center">
+            <motion.h3
+              initial={{ opacity: 0, x: -50 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-2xl font-bold text-gray-900 dark:text-white mb-8"
+            >
+              Featured Work
+            </motion.h3>
+            <motion.p
+              initial={{ opacity: 0, x: -50 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-sm text-blue-700 dark:text-blue-500"
+            >
+              <Link href={"/projects"}>View all projects</Link>
+            </motion.p>
+          </div>
           <div className="grid md:grid-cols-2 gap-8">
             {projects
-              .filter((project) => project.featured)
-              .map((project, index) => (
-                <Link key={project.id} href={`/projects/${project.id}`}>
+              // .filter((project) => project.featured)
+              ?.map((project, index) => (
+                <Link key={project._id} href={`/projects/${project._id}`}>
                   <ProjectCard
                     project={project}
                     index={index}

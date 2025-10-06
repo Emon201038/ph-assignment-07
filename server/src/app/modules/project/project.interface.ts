@@ -3,6 +3,7 @@ import { Document } from "mongoose";
 export interface IProject extends Document {
   id: number;
   title: string;
+  slug: string;
   description: string;
   image: string;
   tags: string[];

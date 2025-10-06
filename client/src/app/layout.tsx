@@ -4,7 +4,6 @@ import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import { ThemeProvider } from "@/providers/theme-provider";
-import AuthProvider from "@/providers/auth-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,7 +38,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Navigation />
-          {children}
+          <div className="min-h-screen mt-16">{children}</div>
           <Toaster />
         </ThemeProvider>
         {/* </AuthProvider> */}

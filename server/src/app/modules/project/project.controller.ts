@@ -25,7 +25,34 @@ const createProject = catchAsync(async (req, res) => {
   });
 });
 
+const getProjectBySlug = catchAsync(async (req, res) => {
+  sendResponse(res, {
+    statusCode: 200,
+    message: "Project found",
+    data: await ProjectService.getProjectBySlug(req.params.slug),
+  });
+});
+
+const updateProject = catchAsync(async (req, res) => {
+  sendResponse(res, {
+    statusCode: 200,
+    message: "Project updated successfully",
+    data: await ProjectService.updateProject(req.params.slug, req.body),
+  });
+});
+
+const deleteProject = catchAsync(async (req, res) => {
+  sendResponse(res, {
+    statusCode: 200,
+    message: "Project deleted successfully",
+    data: await ProjectService.deleteProject(req.params.slug),
+  });
+});
+
 export const ProjectController = {
   getAllProjects,
   createProject,
+  getProjectBySlug,
+  updateProject,
+  deleteProject,
 };

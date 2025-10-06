@@ -1,9 +1,5 @@
-// utils/uploadFiles.ts
-import { createReadStream, ReadStream } from "fs";
 import streamifier from "streamifier";
 import { uploadStreamToCloudinary, UploadedFile } from "./upload-cloudinary";
-import cloudinary from "../lib/cloudinary";
-import { UploadApiResponse } from "cloudinary";
 
 export async function uploadFilesToCloudinary(
   files: Express.Multer.File | Express.Multer.File[],
@@ -17,7 +13,6 @@ export async function uploadFilesToCloudinary(
       if (!file) return null;
 
       const { mimetype } = file;
-      console.log(file);
 
       const resourceType = mimetype.startsWith("video") ? "video" : "image";
 

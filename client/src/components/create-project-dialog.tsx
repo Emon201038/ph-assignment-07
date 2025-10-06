@@ -41,12 +41,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { fi } from "zod/v4/locales";
 import { Switch } from "./ui/switch";
+import toast from "react-hot-toast";
+import { invalidateCache } from "@/actions";
+
+const serverUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export function CreateProjectDialog() {
   const [open, setOpen] = useState(false);
-  const [tagInput, setTagInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(createProjectSchema),
@@ -70,13 +73,49 @@ export function CreateProjectDialog() {
     },
   });
 
-  const handleSubmit = (value: CreateProjectSchemaType) => {
+  const handleSubmit = async (value: CreateProjectSchemaType) => {
     // Handle project creation logic here
     console.log("[v0] Project created", value);
-    setOpen(false);
-  };
+    setIsLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("title", value.title);
+      formData.append("description", value.description);
+      formData.append("image", value.image); // File object
+      formData.append("github", value.github);
+      formData.append("live", value.live);
+      formData.append("featured", value.featured.toString());
 
-  console.log(form.formState.errors);
+      // For nested objects, stringify them
+      formData.append(
+        "details",
+        JSON.stringify({
+          duration: { start: "2025-01-01", end: "2025-02-01" },
+          features: "Cool features",
+          role: "Developer",
+          techStack: "React, Node",
+          status: "active",
+        })
+      );
+      const res = await fetch(`${serverUrl}/api/v1/project`, {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data?.success) {
+        setOpen(false);
+        toast.success("Project created successfull.");
+        invalidateCache("projects");
+      } else {
+        toast.error("Failed to create project. Reason: " + data?.message);
+      }
+    } catch (error) {
+      toast.error("Failed to create Project. " + (error as any)?.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -326,7 +365,9 @@ export function CreateProjectDialog() {
               >
                 Cancel
               </Button>
-              <Button type="submit">Create Project</Button>
+              <Button disabled={isLoading} type="submit">
+                Create Project
+              </Button>
             </div>
           </form>
         </Form>

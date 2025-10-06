@@ -1,20 +1,19 @@
 export interface IProject {
-  id: number;
+  _id: number;
   title: string;
+  slug: string;
   description: string;
-  image: string;
   tags: string[];
-  github: {
-    name: string;
-    url: string;
-  }[];
+  github: string;
   live: string;
   featured: boolean;
   details: {
+    image: { url: string };
     techStack: string[];
     features: string[];
     role: string;
     duration: string;
+    status: "active" | "draft" | "archived";
   };
 }
 
@@ -32,3 +31,16 @@ export enum UserRole {
 }
 
 export type SessionStatus = "loading" | "authenticated" | "unauthenticated";
+
+export interface IApiResponse<T> {
+  statusCode: number;
+  message: string;
+  data: T;
+}
+
+export interface IMeta {
+  totalResult: number;
+  page: number;
+  limit: number;
+  totalPage: number;
+}

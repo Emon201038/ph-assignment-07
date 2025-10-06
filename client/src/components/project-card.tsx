@@ -28,25 +28,24 @@ const ProjectCard = ({
           objectFit="contain"
           fill
           alt="project_image"
-          src={project.image}
+          src={project.details.image.url}
           className="bg-transparent"
         />
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <div className="absolute bottom-4 left-4 right-4 flex space-x-3">
-          {project.github.map((stack) => (
+          {project.github && (
             <motion.div
-              key={stack.name}
-              onClick={() => window.open(stack.url, "_blank")}
+              onClick={() => window.open(project.github, "_blank")}
               rel="noopener noreferrer"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors duration-200 flex items-center justify-center gap-1"
             >
               <Github size={20} />
-              <p> {stack.name}</p>
+              <p> Source code</p>
             </motion.div>
-          ))}
+          )}
           {project.live !== "#" && (
             <motion.div
               onClick={() => window.open(project.live, "_blank")}
@@ -71,7 +70,7 @@ const ProjectCard = ({
         {project.description}
       </p>
       <div className="flex flex-wrap gap-2">
-        {project.tags.map((tag) => (
+        {project.details.techStack.map((tag) => (
           <span
             key={tag}
             className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-sm font-medium"

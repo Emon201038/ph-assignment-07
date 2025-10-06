@@ -2,6 +2,8 @@ import { uploadFilesToCloudinary } from "../../utils/upload-files";
 import { QueryBuilder } from "../../lib/queryBuilder";
 import Project from "./project.model";
 import { CreateProjectSchemaType } from "./project.validation";
+import AppError from "../../helpers/appError";
+import slugify from "slugify";
 
 const getAllProjects = async (query: Record<string, string>) => {
   const builder = new QueryBuilder(Project, query as Record<string, string>);
@@ -11,16 +13,27 @@ const getAllProjects = async (query: Record<string, string>) => {
     .paginate()
     .execWithMeta();
 
-  return projects;
+  return { projects: projects.data, meta: projects.meta };
 };
 
 const createProject = async (
   projectData: CreateProjectSchemaType,
   file: Express.Multer.File
 ) => {
+  const payload = {
+    ...projectData,
+    details: {
+      ...projectData.details,
+      techStack: [""],
+      features: [""],
+    },
+    slug: "",
+  };
   if (file) {
     const uploadedFile = await uploadFilesToCloudinary(file, "projects");
-    projectData.details.image = {
+    if (!uploadedFile) throw new AppError(500, "File upload failed");
+
+    payload.details.image = {
       url: Array.isArray(uploadedFile)
         ? uploadedFile[0]?.url
         : uploadedFile?.url,
@@ -29,14 +42,52 @@ const createProject = async (
         : uploadedFile?.pub_id,
     };
   }
-  const newProject = await Project.create(projectData);
-  if (!newProject) throw new Error("Project not created");
-  console.log(newProject);
-  console.log(projectData);
+
+  payload.details.techStack = projectData.details.techStack
+    .split(",")
+    .map((tech) => tech.trim());
+
+  payload.details.features = projectData.details.features
+    .split(",")
+    .map((feature) => feature.trim());
+
+  payload.slug = slugify(projectData.title);
+  const newProject = await Project.create(payload);
+  if (!newProject) throw new AppError(500, "Project not created");
+
   return newProject;
+};
+
+const getProjectBySlug = async (slug: string) => {
+  const project = await Project.findOne({ slug });
+  if (!project) throw new AppError(404, "No Project Found");
+
+  return project;
+};
+
+const updateProject = async (
+  slug: string,
+  projectData: Partial<CreateProjectSchemaType>
+) => {
+  const project = await Project.findOneAndUpdate({ slug }, projectData, {
+    new: true,
+  });
+  if (!project) throw new AppError(404, "No Project Found");
+
+  return project;
+};
+
+const deleteProject = async (slug: string) => {
+  const project = await Project.findOneAndDelete({ slug });
+  if (!project) throw new AppError(404, "No Project Found");
+
+  return project;
 };
 
 export const ProjectService = {
   getAllProjects,
   createProject,
+  getProjectBySlug,
+  updateProject,
+  deleteProject,
 };

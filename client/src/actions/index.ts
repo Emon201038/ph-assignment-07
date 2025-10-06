@@ -1,4 +1,7 @@
 "use server";
+
+import { revalidateTag } from "next/cache";
+
 export const sendEmail = async (
   formData: FormData
 ): Promise<{ status: number; result: string }> => {
@@ -15,4 +18,8 @@ export const sendEmail = async (
 
   console.log(result);
   return { status, result };
+};
+
+export const invalidateCache = async (tag: string) => {
+  revalidateTag(tag);
 };
