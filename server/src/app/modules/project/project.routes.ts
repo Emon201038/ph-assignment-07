@@ -20,7 +20,11 @@ projectRouter
 projectRouter
   .route("/:slug")
   .get(ProjectController.getProjectBySlug)
-  .put(checkAuth("ADMIN", "SUPER_ADMIN"), ProjectController.updateProject)
+  .put(
+    checkAuth("ADMIN", "SUPER_ADMIN"),
+    validateRequest(createProjectSchema),
+    ProjectController.updateProject
+  )
   .delete(checkAuth("ADMIN", "SUPER_ADMIN"), ProjectController.deleteProject);
 
 export default projectRouter;

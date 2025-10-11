@@ -68,6 +68,56 @@ function getPublicIdFromUrl(url: string): string {
   return filename.replace(/\.[^/.]+$/, ""); // remove extension (.jpg, .png, etc.)
 }
 
+// Helper to create unique slug
+async function generateUniqueSlug(
+  model: any,
+  baseSlug: string,
+  excludeId?: string
+) {
+  let slug = baseSlug;
+  let counter = 1;
+
+  while (
+    await model.exists({
+      slug,
+      ...(excludeId ? { _id: { $ne: excludeId } } : {}),
+    })
+  ) {
+    slug = `${baseSlug}-${counter++}`;
+  }
+
+  return slug;
+}
+
+// 🔹 Create slug before save
+projectSchema.pre("save", async function (next) {
+  if (this.isModified("title")) {
+    const baseSlug = slugify(this.title, { lower: true, strict: true });
+    this.slug = await generateUniqueSlug(
+      this.constructor,
+      baseSlug,
+      this._id?.toString()
+    );
+  }
+  next();
+});
+
+// Update slug before findOneAndUpdate
+projectSchema.pre("findOneAndUpdate", async function (next) {
+  const update: any = this.getUpdate();
+  if (update.title) {
+    const baseSlug = slugify(update.title, { lower: true, strict: true });
+    const doc = await this.model.findOne(this.getFilter());
+    const newSlug = await generateUniqueSlug(
+      this.model,
+      baseSlug,
+      doc?._id?.toString()
+    );
+    this.set({ slug: newSlug });
+  }
+  next();
+});
+
 projectSchema.pre("findOneAndDelete", async function () {
   const doc = await this.model.findOne(this.getFilter());
   if (doc.details?.image?.url) {

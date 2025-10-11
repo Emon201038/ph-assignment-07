@@ -17,6 +17,7 @@ export const createProjectSchema = z.object({
       start: z.string().min(2, { error: "Start date is required" }),
       end: z.string().min(2, { error: "End date is required" }),
     }),
+    tags: z.string().optional(),
     features: z.string().min(1, { error: "At least one feature is required" }),
     role: z.string().min(2, { error: "Role should be minimum 2 charecters" }),
     techStack: z

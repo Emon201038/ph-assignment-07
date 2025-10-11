@@ -71,12 +71,24 @@ const updateProject = async (
   slug: string,
   projectData: Partial<CreateProjectSchemaType>
 ) => {
-  const project = await Project.findOneAndUpdate({ slug }, projectData, {
+  const existingProject = await Project.findOne({ slug });
+  if (!existingProject) throw new AppError(404, "No Project Found");
+
+  const updatedData = {
+    ...existingProject.toObject(),
+    ...projectData,
+    details: {
+      ...existingProject.details,
+      ...projectData.details,
+      image: projectData.details?.image || existingProject.details?.image,
+    },
+  };
+
+  const updatedProject = await Project.findOneAndUpdate({ slug }, updatedData, {
     new: true,
   });
-  if (!project) throw new AppError(404, "No Project Found");
 
-  return project;
+  return updatedProject;
 };
 
 const deleteProject = async (slug: string) => {
