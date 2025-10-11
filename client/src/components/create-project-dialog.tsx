@@ -89,13 +89,7 @@ export function CreateProjectDialog() {
       // For nested objects, stringify them
       formData.append(
         "details",
-        JSON.stringify({
-          duration: { start: "2025-01-01", end: "2025-02-01" },
-          features: "Cool features",
-          role: "Developer",
-          techStack: "React, Node",
-          status: "active",
-        })
+        JSON.stringify(value.details, (key, value) => (value ? value : ""))
       );
       const res = await fetch(`${serverUrl}/api/v1/project`, {
         method: "POST",
@@ -106,6 +100,7 @@ export function CreateProjectDialog() {
       if (data?.success) {
         setOpen(false);
         toast.success("Project created successfull.");
+        form.reset();
         invalidateCache("projects");
       } else {
         toast.error("Failed to create project. Reason: " + data?.message);

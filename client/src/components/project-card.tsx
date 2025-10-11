@@ -36,7 +36,10 @@ const ProjectCard = ({
         <div className="absolute bottom-4 left-4 right-4 flex space-x-3">
           {project.github && (
             <motion.div
-              onClick={() => window.open(project.github, "_blank")}
+              onClick={(e) => {
+                e.preventDefault();
+                window.open(project.github, "_blank");
+              }}
               rel="noopener noreferrer"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
@@ -48,7 +51,10 @@ const ProjectCard = ({
           )}
           {project.live !== "#" && (
             <motion.div
-              onClick={() => window.open(project.live, "_blank")}
+              onClick={(e) => {
+                e.preventDefault();
+                window.open(project.live, "_blank");
+              }}
               rel="noopener noreferrer"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}

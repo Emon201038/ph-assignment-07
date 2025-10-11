@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Github } from "lucide-react";
 import Link from "next/link";
-import ProjectCard from "./project-card";
+import ProjectCard from "./project-card2";
 import { IProject } from "@/types";
 
 const Projects = ({ projects = [] }: { projects: IProject[] }) => {
@@ -52,17 +52,11 @@ const Projects = ({ projects = [] }: { projects: IProject[] }) => {
               <Link href={"/projects"}>View all projects</Link>
             </motion.p>
           </div>
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="space-y-16">
             {projects
               // .filter((project) => project.featured)
               ?.map((project, index) => (
-                <Link key={project._id} href={`/projects/${project._id}`}>
-                  <ProjectCard
-                    project={project}
-                    index={index}
-                    inView={inView}
-                  />
-                </Link>
+                <ProjectCard key={project._id} project={project} />
               ))}
           </div>
         </div>

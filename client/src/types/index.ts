@@ -3,7 +3,7 @@ export interface IProject {
   title: string;
   slug: string;
   description: string;
-  tags: string[];
+
   github: string;
   live: string;
   featured: boolean;
@@ -11,8 +11,12 @@ export interface IProject {
     image: { url: string };
     techStack: string[];
     features: string[];
+    tags: string[];
     role: string;
-    duration: string;
+    duration: {
+      start: string;
+      end: string;
+    };
     status: "active" | "draft" | "archived";
   };
 }

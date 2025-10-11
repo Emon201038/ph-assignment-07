@@ -1,66 +1,52 @@
-// import { Server } from "http";
+/* eslint-disable no-console */
+import { Server } from "http";
 import { connectDB } from "./app/config/db";
 import app from "./app";
-// import { envVars } from "./app/config/env";
+import { envVars } from "./app/config/env";
 import { seedAdmin } from "./app/utils/seedAdmin";
 
-// let server: Server;
+let server: Server;
 
-connectDB().then(() => seedAdmin());
+const start = async () => {
+  try {
+    await connectDB();
+    await seedAdmin();
+
+    // ✅ Only start a real HTTP server in local/development
+    if (!process.env.VERCEL) {
+      const port = envVars.PORT || 5000;
+      server = app.listen(port, () => {
+        console.log(`🚀 Server running locally on port ${port}`);
+      });
+    }
+  } catch (error) {
+    console.error("❌ Failed to start server:", error);
+    process.exit(1);
+  }
+};
+
+start();
+
+// ✅ Export for Vercel (serverless)
 export default app;
 
-// const startServer = async () => {
-//   try {
-//     await connectDB();
-//     await seedAdmin();
+// 🧹 Graceful shutdown (optional but recommended)
+process.on("unhandledRejection", (error) => {
+  console.error("Unhandled Rejection:", error);
+  if (server) server.close(() => process.exit(1));
+});
 
-//     app.listen(envVars.PORT, () => {
-//       console.log(`Server is running on port ${envVars.PORT}`);
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     process.exit(1);
-//   }
-// };
+process.on("uncaughtException", (error) => {
+  console.error("Uncaught Exception:", error);
+  if (server) server.close(() => process.exit(1));
+});
 
-// (async () => {
-//   await startServer();
-// })();
+process.on("SIGTERM", () => {
+  console.log("SIGTERM received. Shutting down gracefully...");
+  if (server) server.close();
+});
 
-// process.on("unhandledRejection", (error) => {
-//   if (server) {
-//     server.close(() => {
-//       console.error(error);
-//       process.exit(1);
-//     });
-//   } else {
-//     process.exit(1);
-//   }
-// });
-
-// process.on("uncaughtException", (error) => {
-//   if (server) {
-//     server.close(() => {
-//       console.error(error);
-//       process.exit(1);
-//     });
-//   } else {
-//     process.exit(1);
-//   }
-// });
-
-// process.on("SIGTERM", () => {
-//   console.log("SIGTERM received");
-//   if (server) {
-//     server.close();
-//   }
-// });
-
-// process.on("SIGINT", () => {
-//   console.log("SIGINT received");
-//   if (server) {
-//     server.close();
-//   }
-// });
-
-// export default app;
+process.on("SIGINT", () => {
+  console.log("SIGINT received. Exiting...");
+  if (server) server.close();
+});

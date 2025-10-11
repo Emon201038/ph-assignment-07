@@ -36,9 +36,12 @@ export async function RecentProjects() {
               Your latest work and updates
             </CardDescription>
           </div>
-          <Button variant="outline" size="sm">
+          <Link
+            href="/dashboard/projects"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+          >
             View All
-          </Button>
+          </Link>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">

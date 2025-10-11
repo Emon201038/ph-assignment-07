@@ -24,8 +24,15 @@ export const createProjectSchema = z.object({
       .string()
       .min(1, { error: "At least one tech stack is required" }),
     status: z.enum(["active", "draft", "archived"]).default("active"),
+    tags: z.string().optional(),
   }),
   featured: z.boolean().default(false),
 });
 
+export const updateProjectSchema = createProjectSchema.extend({
+  image: z.instanceof(File).optional().or(z.string().optional()),
+});
+
+// ✅ Type inference
 export type CreateProjectSchemaType = z.infer<typeof createProjectSchema>;
+export type UpdateProjectSchemaType = z.infer<typeof updateProjectSchema>;

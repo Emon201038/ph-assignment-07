@@ -85,7 +85,23 @@ export function ProjectDetails({ project }: { project: IProject }) {
                 <Calendar className="h-4 w-4 text-muted-foreground" />
                 <span className="font-medium">Duration:</span>
                 <span className="text-muted-foreground">
-                  {project.details.duration}
+                  {new Date(project.details.duration.start).toLocaleDateString(
+                    "en-US",
+                    {
+                      month: "short",
+                      year: "numeric",
+                      day: "numeric",
+                    }
+                  )}{" "}
+                  -{" "}
+                  {new Date(project.details.duration.end).toLocaleDateString(
+                    "en-US",
+                    {
+                      month: "short",
+                      year: "numeric",
+                      day: "numeric",
+                    }
+                  )}
                 </span>
               </div>
               <div className="flex items-center gap-2 text-sm">
@@ -145,7 +161,7 @@ export function ProjectDetails({ project }: { project: IProject }) {
       </Card>
 
       {/* Tags Section */}
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle>Technologies Used</CardTitle>
           <CardDescription>
@@ -164,7 +180,7 @@ export function ProjectDetails({ project }: { project: IProject }) {
             ))}
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
 
       {/* Footer */}
       <div className="mt-16 text-center">

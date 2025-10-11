@@ -15,6 +15,7 @@ const ProjectsPage = async () => {
       next: { tags: ["projects"] },
     }
   );
+
   return <Projects projects={res.data.projects || []} />;
 };
 

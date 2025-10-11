@@ -51,7 +51,9 @@ const createProject = async (
     .split(",")
     .map((feature) => feature.trim());
 
-  payload.slug = slugify(projectData.title);
+  payload.slug = slugify(projectData.title, {
+    lower: true,
+  });
   const newProject = await Project.create(payload);
   if (!newProject) throw new AppError(500, "Project not created");
 
