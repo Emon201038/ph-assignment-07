@@ -35,6 +35,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     notFound();
   }
 
+  console.log(res);
   return (
     <main className="min-h-screen bg-background mt-12">
       <ProjectDetails project={res.data} />

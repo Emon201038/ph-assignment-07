@@ -74,21 +74,45 @@ const updateProject = async (
   const existingProject = await Project.findOne({ slug });
   if (!existingProject) throw new AppError(404, "No Project Found");
 
-  const updatedData = {
-    ...existingProject.toObject(),
-    ...projectData,
-    details: {
-      ...existingProject.details,
-      ...projectData.details,
-      image: projectData.details?.image || existingProject.details?.image,
-    },
-  };
+  const detailsUpdate: any = {};
 
-  const updatedProject = await Project.findOneAndUpdate({ slug }, updatedData, {
-    new: true,
-  });
+  if (projectData.details?.techStack) {
+    existingProject.details.techStack = projectData.details.techStack
+      .split(",")
+      .map((tech) => tech.trim());
+  }
 
-  return updatedProject;
+  if (projectData.details?.features) {
+    existingProject.details.features = projectData.details.features
+      .split(",")
+      .map((feature) => feature.trim());
+  }
+
+  if (projectData.details?.tags) {
+    existingProject.details.tags = projectData.details.tags
+      .split(",")
+      .map((tag) => tag.trim());
+  }
+
+  // if (projectData.details?.image) {
+  //   existingProject.details.image = projectData.details.image;
+  // }
+
+  // const updatedProject = await Project.findOneAndUpdate(
+  //   { slug },
+  //   {
+  //     $set: {
+  //       ...projectData,
+  //       ...detailsUpdate,
+  //     },
+  //   },
+  //   { new: true, runValidators: true }
+  // );
+
+  await existingProject.save({ validateBeforeSave: true });
+
+  console.log("Updated Project: ", existingProject, "\n");
+  return existingProject;
 };
 
 const deleteProject = async (slug: string) => {

@@ -48,3 +48,12 @@ export interface IMeta {
   limit: number;
   totalPage: number;
 }
+
+export interface IAdminStats {
+  totalProjects: number;
+  totalBlogs: number;
+  totalActiveProjects: number;
+  totalPublishedBlogs: number;
+  totalFeaturedBlogs: number;
+  totalFeaturedProjects: number;
+}

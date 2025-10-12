@@ -12,8 +12,6 @@ const AuthButton = () => {
   const router = useRouter();
   const session = useSession();
 
-  console.log(session);
-
   if (session?.status === "unauthenticated") return null;
 
   const handleLogout = async () => {
@@ -31,16 +29,16 @@ const AuthButton = () => {
 
   const buttonText = (
     <span>
-      {pathname === "/dashboard" ? (
-        <div
-          onClick={handleLogout}
-          className="flex gap-1 justify-center items-center"
-        >
-          <LogOut size={15} /> Logout
-        </div>
-      ) : (
-        <div onClick={() => router.push("/dashboard")}>Dashboard</div>
-      )}
+      {/* {pathname === "/dashboard" ? ( */}
+      <div
+        onClick={handleLogout}
+        className="flex gap-1 justify-center items-center"
+      >
+        <LogOut size={15} /> Logout
+      </div>
+      {/* ) : ( */}
+      {/* <div onClick={() => router.push("/dashboard")}>Dashboard</div> */}
+      {/* )} */}
     </span>
   );
   return (

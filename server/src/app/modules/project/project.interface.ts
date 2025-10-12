@@ -16,6 +16,7 @@ export interface IProject extends Document {
 export interface IDetails {
   techStack: string[];
   features: string[];
+  tags: string[];
   role: string;
   duration: {
     start: Date;

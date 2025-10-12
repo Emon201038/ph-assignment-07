@@ -1,4 +1,4 @@
-import { IApiResponse, IMeta, IProject } from "@/types";
+import { IAdminStats, IApiResponse, IMeta, IProject } from "@/types";
 
 const serverUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -24,6 +24,17 @@ export const getProjectBySlug = async (
 ): Promise<IApiResponse<IProject>> => {
   try {
     const res = await fetch(`${serverUrl}/api/v1/project/${slug}`, reqInit);
+    return await res.json();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAdminStats = async (
+  reqInit?: RequestInit
+): Promise<IApiResponse<IAdminStats>> => {
+  try {
+    const res = await fetch(`${serverUrl}/api/v1/admin/stats`, reqInit);
     return await res.json();
   } catch (error) {
     throw error;

@@ -17,9 +17,9 @@ import {
 import { getProjects } from "@/lib/fetch-data";
 import Image from "next/image";
 import Link from "next/link";
-import DeleteButtonProject from "./delete-button-project";
+import DeleteButtonProject from "@/components/delete-button-project";
 
-export async function RecentProjects() {
+export default async function RecentProjects() {
   const res = await getProjects({
     page: "1",
     limit: "6",
