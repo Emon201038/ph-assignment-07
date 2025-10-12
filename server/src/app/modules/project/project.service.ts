@@ -122,10 +122,20 @@ const deleteProject = async (slug: string) => {
   return project;
 };
 
+const archiveProject = async (slug: string, archived: boolean) => {
+  const project = await Project.findOne({ slug });
+  if (!project) throw new AppError(404, "No Project Found");
+
+  project.details.status = archived ? "archived" : "active";
+  await project.save({ validateBeforeSave: true });
+  return project;
+};
+
 export const ProjectService = {
   getAllProjects,
   createProject,
   getProjectBySlug,
   updateProject,
   deleteProject,
+  archiveProject,
 };

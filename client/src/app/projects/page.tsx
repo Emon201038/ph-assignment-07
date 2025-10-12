@@ -19,6 +19,7 @@ export default async function ProjectsPage() {
       limit: "100",
       sortBy: "createdAt",
       sortOrder: "desc",
+      "details.status": "active",
     },
     {
       next: { tags: ["projects"] },

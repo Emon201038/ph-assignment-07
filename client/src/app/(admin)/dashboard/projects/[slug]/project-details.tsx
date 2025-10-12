@@ -1,3 +1,4 @@
+import { invalidateCache } from "@/actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +11,10 @@ import {
 import { IProject } from "@/types";
 import { ArrowLeft, Edit, ExternalLink, Github, Zap } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+
+const serverUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const ProjectDetails = ({ project }: { project: IProject }) => {
   return (

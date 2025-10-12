@@ -27,4 +27,10 @@ projectRouter
   )
   .delete(checkAuth("ADMIN", "SUPER_ADMIN"), ProjectController.deleteProject);
 
+projectRouter.patch(
+  "/:slug/archive",
+  checkAuth("ADMIN", "SUPER_ADMIN"),
+  ProjectController.archiveProject
+);
+
 export default projectRouter;

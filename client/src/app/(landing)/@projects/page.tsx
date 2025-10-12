@@ -10,6 +10,7 @@ const ProjectsPage = async () => {
       featured: "true",
       sortBy: "createdAt",
       sortOrder: "desc",
+      "details.status": "active",
     },
     {
       next: { tags: ["projects"] },

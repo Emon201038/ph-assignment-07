@@ -1,4 +1,4 @@
-import { ExternalLink, MoreVertical, Eye } from "lucide-react";
+import { ExternalLink, Eye } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -8,16 +8,10 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { getProjects } from "@/lib/fetch-data";
 import Image from "next/image";
 import Link from "next/link";
-import DeleteButtonProject from "@/components/delete-button-project";
+import MoreButton from "@/components/more-button";
 
 export default async function RecentProjects() {
   const res = await getProjects({
@@ -70,26 +64,11 @@ export default async function RecentProjects() {
                       {project.description}
                     </p>
                   </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <MoreVertical className="h-4 w-4" />
-                        <span className="sr-only">More options</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>
-                        <Link
-                          href={`/dashboard/projects/${project.slug}?isEditMode=true`}
-                          className="w-full"
-                        >
-                          Edit
-                        </Link>
-                      </DropdownMenuItem>
-                      <DeleteButtonProject slug={project.slug} />
-                      <DropdownMenuItem>Archive</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <MoreButton
+                    type="project"
+                    slug={project.slug}
+                    status={project.details.status}
+                  />
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2">

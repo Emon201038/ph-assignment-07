@@ -49,10 +49,21 @@ const deleteProject = catchAsync(async (req, res) => {
   });
 });
 
+const archiveProject = catchAsync(async (req, res) => {
+  const archived = JSON.parse(req.body.archived);
+  console.log(archived);
+  sendResponse(res, {
+    statusCode: 200,
+    message: `Project ${!archived ? "unarchived" : "archived"} successfully`,
+    data: await ProjectService.archiveProject(req.params.slug, archived),
+  });
+});
+
 export const ProjectController = {
   getAllProjects,
   createProject,
   getProjectBySlug,
   updateProject,
   deleteProject,
+  archiveProject,
 };
