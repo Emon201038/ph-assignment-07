@@ -28,7 +28,6 @@ function uploadFilesToCloudinary(files, folder) {
             return (0, upload_cloudinary_1.uploadStreamToCloudinary)(streamifier_1.default.createReadStream(file.buffer), folder, resourceType);
         })));
         const cleanUploads = uploads.filter(Boolean);
-        console.log(cleanUploads);
         return Array.isArray(files)
             ? cleanUploads
             : cleanUploads

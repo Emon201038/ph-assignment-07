@@ -37,6 +37,7 @@ export enum UserRole {
 export type SessionStatus = "loading" | "authenticated" | "unauthenticated";
 
 export interface IApiResponse<T> {
+  success: boolean;
   statusCode: number;
   message: string;
   data: T;

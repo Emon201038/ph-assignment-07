@@ -16,7 +16,6 @@ export const sendEmail = async (
   const status = response.status;
   const result = await response.text();
 
-  console.log(result);
   return { status, result };
 };
 

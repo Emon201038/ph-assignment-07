@@ -25,7 +25,7 @@ const DeleteButton = ({ project }: { project: IProject }) => {
   const handleDelete = async () => {
     try {
       setIsLoading(true);
-      let toastId = toast.loading(`Deleting project...`);
+      const toastId = toast.loading(`Deleting project...`);
       const res = await fetch(`${serverUrl}/api/v1/project/${project.slug}`, {
         method: "DELETE",
         credentials: "include",

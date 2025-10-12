@@ -19,4 +19,5 @@ projectRouter
     .get(project_controller_1.ProjectController.getProjectBySlug)
     .put((0, checkAuth_1.checkAuth)("ADMIN", "SUPER_ADMIN"), (0, validateRequest_1.validateRequest)(project_validation_1.createProjectSchema), project_controller_1.ProjectController.updateProject)
     .delete((0, checkAuth_1.checkAuth)("ADMIN", "SUPER_ADMIN"), project_controller_1.ProjectController.deleteProject);
+projectRouter.patch("/:slug/archive", (0, checkAuth_1.checkAuth)("ADMIN", "SUPER_ADMIN"), project_controller_1.ProjectController.archiveProject);
 exports.default = projectRouter;

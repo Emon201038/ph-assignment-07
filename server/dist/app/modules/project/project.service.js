@@ -64,20 +64,41 @@ const getProjectBySlug = (slug) => __awaiter(void 0, void 0, void 0, function* (
     return project;
 });
 const updateProject = (slug, projectData) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a, _b, _c;
     const existingProject = yield project_model_1.default.findOne({ slug });
     if (!existingProject)
         throw new appError_1.default(404, "No Project Found");
-    const updatedData = Object.assign(Object.assign(Object.assign({}, existingProject.toObject()), projectData), { details: Object.assign(Object.assign(Object.assign({}, existingProject.details), projectData.details), { image: ((_a = projectData.details) === null || _a === void 0 ? void 0 : _a.image) || ((_b = existingProject.details) === null || _b === void 0 ? void 0 : _b.image) }) });
-    const updatedProject = yield project_model_1.default.findOneAndUpdate({ slug }, updatedData, {
-        new: true,
-    });
-    return updatedProject;
+    const detailsUpdate = {};
+    if ((_a = projectData.details) === null || _a === void 0 ? void 0 : _a.techStack) {
+        existingProject.details.techStack = projectData.details.techStack
+            .split(",")
+            .map((tech) => tech.trim());
+    }
+    if ((_b = projectData.details) === null || _b === void 0 ? void 0 : _b.features) {
+        existingProject.details.features = projectData.details.features
+            .split(",")
+            .map((feature) => feature.trim());
+    }
+    if ((_c = projectData.details) === null || _c === void 0 ? void 0 : _c.tags) {
+        existingProject.details.tags = projectData.details.tags
+            .split(",")
+            .map((tag) => tag.trim());
+    }
+    yield existingProject.save({ validateBeforeSave: true });
+    return existingProject;
 });
 const deleteProject = (slug) => __awaiter(void 0, void 0, void 0, function* () {
     const project = yield project_model_1.default.findOneAndDelete({ slug });
     if (!project)
         throw new appError_1.default(404, "No Project Found");
+    return project;
+});
+const archiveProject = (slug, archived) => __awaiter(void 0, void 0, void 0, function* () {
+    const project = yield project_model_1.default.findOne({ slug });
+    if (!project)
+        throw new appError_1.default(404, "No Project Found");
+    project.details.status = archived ? "archived" : "active";
+    yield project.save({ validateBeforeSave: true });
     return project;
 });
 exports.ProjectService = {
@@ -86,4 +107,5 @@ exports.ProjectService = {
     getProjectBySlug,
     updateProject,
     deleteProject,
+    archiveProject,
 };

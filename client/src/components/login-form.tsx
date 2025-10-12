@@ -2,44 +2,44 @@
 
 import type React from "react";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Eye, EyeClosed } from "lucide-react";
-import { useSession } from "@/providers/auth-provider";
 import { useRouter } from "next/navigation";
-
-const serverUrl = process.env.NEXT_PUBLIC_API_URL;
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, LoginSchemaType } from "@/utils/zodSchema";
+import { Form } from "./ui/form";
+import { RHFInput } from "./rhf-input";
+import { signIn } from "next-auth/react";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 export function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPass, setShowPass] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const form = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  const session = useSession();
   const router = useRouter();
-  // const params = useSearchParams();
 
-  console.log(session, "session");
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle login logic here
-    const res = await fetch(`${serverUrl}/api/v1/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-      credentials: "include",
-    });
-
-    const data = await res.json();
-    if (data?.data?.token) {
-      session?.setSession?.({ status: "authenticated", data: data?.data });
-      const redirectUrl = "/dashboard";
-      router.push(redirectUrl);
+  const handleSubmit = async (value: LoginSchemaType) => {
+    const tostId = toast.loading("Signing in...");
+    setIsLoading(true);
+    try {
+      await signIn("credentials", {
+        email: value.email,
+        password: value.password,
+        redirect: false,
+      });
+      toast.success("Signed in successfully", { id: tostId });
+      router.push("/dashboard");
+    } catch (error) {
+      toast.error("Failed to sign in", { id: tostId });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -54,54 +54,30 @@ export function LoginForm() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-sm font-normal">
-              Email
-            </Label>
-            <Input
-              id="email"
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <div className="space-y-4">
+            <RHFInput
+              control={form.control}
+              name="email"
+              placeholder="Enter your email"
+              label="Email *"
               type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="h-11"
+            />
+            <RHFInput
+              control={form.control}
+              name="password"
+              placeholder="Enter your password"
+              label="Password *"
+              type="password"
             />
           </div>
 
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="password" className="text-sm font-normal">
-                Password
-              </Label>
-            </div>
-            <div className="relative h-11">
-              <Input
-                id="password"
-                type={showPass ? "text" : "password"}
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="h-full"
-              />
-              <Button
-                type="button"
-                onClick={() => setShowPass((prev) => !prev)}
-                className="absolute right-0 top-0 h-full rounded-l-none"
-              >
-                {showPass ? <Eye /> : <EyeClosed />}
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        <Button type="submit" className="w-full h-11">
-          Sign in
-        </Button>
-      </form>
+          <Button disabled={isLoading} type="submit" className="w-full h-11">
+            Sign in
+          </Button>
+        </form>
+      </Form>
     </div>
   );
 }

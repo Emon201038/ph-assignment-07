@@ -22,6 +22,7 @@ import { MoreVertical } from "lucide-react";
 import Link from "next/link";
 import { invalidateCache } from "@/actions";
 import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
 
 const serverUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -37,14 +38,19 @@ const MoreButton = ({
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const session = useSession();
+
   const handleDelete = async () => {
     try {
       setIsLoading(true);
       setOpen(false);
-      let toastId = toast.loading(`Deleting ${type}...`);
+      const toastId = toast.loading(`Deleting ${type}...`);
       const res = await fetch(`${serverUrl}/api/v1/${type}/${slug}`, {
         method: "DELETE",
         credentials: "include",
+        headers: {
+          authorization: session?.data?.token as string,
+        },
       });
       const data = await res.json();
       if (!data?.success) {
@@ -69,7 +75,7 @@ const MoreButton = ({
   const handleArchive = async () => {
     setOpen(false);
     setIsLoading(true);
-    let toastId = toast.loading("Archiving project...");
+    const toastId = toast.loading("Archiving project...");
 
     try {
       const res = await fetch(`${serverUrl}/api/v1/${type}/${slug}/archive`, {
@@ -77,6 +83,7 @@ const MoreButton = ({
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          authorization: session?.data?.token as string,
         },
         body: JSON.stringify({
           archived: status === "archived" ? false : true,

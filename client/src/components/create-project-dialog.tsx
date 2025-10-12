@@ -74,8 +74,6 @@ export function CreateProjectDialog() {
   });
 
   const handleSubmit = async (value: CreateProjectSchemaType) => {
-    // Handle project creation logic here
-    console.log("[v0] Project created", value);
     setIsLoading(true);
     try {
       const formData = new FormData();

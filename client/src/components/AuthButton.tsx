@@ -2,8 +2,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
-import { useSession } from "@/providers/auth-provider";
 import { LogOut } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 
 const serverUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -20,7 +20,7 @@ const AuthButton = () => {
         method: "POST",
         credentials: "include",
       });
-      session?.setSession?.({ status: "unauthenticated", data: null });
+      await signOut({ callbackUrl: "/login" });
       router.push("/login");
     } catch (error) {
       console.log(error);
@@ -28,18 +28,12 @@ const AuthButton = () => {
   };
 
   const buttonText = (
-    <span>
-      {/* {pathname === "/dashboard" ? ( */}
-      <div
-        onClick={handleLogout}
-        className="flex gap-1 justify-center items-center"
-      >
-        <LogOut size={15} /> Logout
-      </div>
-      {/* ) : ( */}
-      {/* <div onClick={() => router.push("/dashboard")}>Dashboard</div> */}
-      {/* )} */}
-    </span>
+    <div
+      onClick={handleLogout}
+      className="flex gap-1 justify-center items-center"
+    >
+      <LogOut size={15} /> Logout
+    </div>
   );
   return (
     <motion.button

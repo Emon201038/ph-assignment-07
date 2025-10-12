@@ -63,7 +63,7 @@ const CreateProjectForm = () => {
   const handleSubmit = async (value: CreateProjectSchemaType) => {
     setIsLoading(true);
     try {
-      let toastId = toast.loading("Creating project...");
+      const toastId = toast.loading("Creating project...");
       const formData = new FormData();
       formData.append("title", value.title);
       formData.append("description", value.description);

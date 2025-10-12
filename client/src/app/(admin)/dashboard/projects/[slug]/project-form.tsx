@@ -37,12 +37,14 @@ import { Input } from "@/components/ui/input";
 import ProjectDetails from "./project-details";
 import toast from "react-hot-toast";
 import { invalidateCache } from "@/actions";
+import { useSession } from "next-auth/react";
 
 export default function ProjectDetailPage({ project }: { project: IProject }) {
   const searchParams = useSearchParams();
   const isEditMode = searchParams.get("isEditMode") === "true";
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const session = useSession();
 
   const form = useForm({
     resolver: zodResolver(updateProjectSchema),
@@ -75,6 +77,7 @@ export default function ProjectDetailPage({ project }: { project: IProject }) {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            authorization: session?.data?.token as string,
           },
           body: JSON.stringify(value),
           credentials: "include",

@@ -28,6 +28,7 @@ const detailsSchema = new mongoose_1.Schema({
         enum: ["active", "draft", "archived"],
         default: "active",
     },
+    tags: [String],
     image: {
         url: String,
         public_id: String,

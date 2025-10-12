@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Plus, Upload } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { Plus, Upload } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -12,20 +12,19 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 export function CreateBlogDialog() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // Handle blog post creation logic here
-    console.log("[v0] Blog post created")
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -38,13 +37,19 @@ export function CreateBlogDialog() {
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create New Blog Post</DialogTitle>
-          <DialogDescription>Write a new blog post to share your thoughts and insights.</DialogDescription>
+          <DialogDescription>
+            Write a new blog post to share your thoughts and insights.
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="blog-title">Title</Label>
-            <Input id="blog-title" placeholder="10 Tips for Better Web Development" required />
+            <Input
+              id="blog-title"
+              placeholder="10 Tips for Better Web Development"
+              required
+            />
           </div>
 
           <div className="space-y-2">
@@ -70,7 +75,12 @@ export function CreateBlogDialog() {
           <div className="space-y-2">
             <Label htmlFor="blog-image">Featured Image</Label>
             <div className="flex items-center gap-4">
-              <Input id="blog-image" type="file" accept="image/*" className="flex-1" />
+              <Input
+                id="blog-image"
+                type="file"
+                accept="image/*"
+                className="flex-1"
+              />
               <Button type="button" variant="outline" size="icon">
                 <Upload className="h-4 w-4" />
               </Button>
@@ -104,7 +114,11 @@ export function CreateBlogDialog() {
           </div>
 
           <div className="flex justify-end gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+            >
               Cancel
             </Button>
             <Button type="submit">Publish Post</Button>
@@ -112,5 +126,5 @@ export function CreateBlogDialog() {
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

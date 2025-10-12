@@ -50,10 +50,19 @@ const deleteProject = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 
         data: yield project_service_1.ProjectService.deleteProject(req.params.slug),
     });
 }));
+const archiveProject = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const archived = JSON.parse(req.body.archived);
+    (0, sendResponse_1.sendResponse)(res, {
+        statusCode: 200,
+        message: `Project ${!archived ? "unarchived" : "archived"} successfully`,
+        data: yield project_service_1.ProjectService.archiveProject(req.params.slug, archived),
+    });
+}));
 exports.ProjectController = {
     getAllProjects,
     createProject,
     getProjectBySlug,
     updateProject,
     deleteProject,
+    archiveProject,
 };

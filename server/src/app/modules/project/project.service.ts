@@ -93,25 +93,7 @@ const updateProject = async (
       .split(",")
       .map((tag) => tag.trim());
   }
-
-  // if (projectData.details?.image) {
-  //   existingProject.details.image = projectData.details.image;
-  // }
-
-  // const updatedProject = await Project.findOneAndUpdate(
-  //   { slug },
-  //   {
-  //     $set: {
-  //       ...projectData,
-  //       ...detailsUpdate,
-  //     },
-  //   },
-  //   { new: true, runValidators: true }
-  // );
-
   await existingProject.save({ validateBeforeSave: true });
-
-  console.log("Updated Project: ", existingProject, "\n");
   return existingProject;
 };
 

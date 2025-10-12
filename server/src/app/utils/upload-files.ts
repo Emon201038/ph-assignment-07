@@ -27,8 +27,6 @@ export async function uploadFilesToCloudinary(
 
   const cleanUploads = uploads.filter(Boolean);
 
-  console.log(cleanUploads);
-
   return Array.isArray(files)
     ? cleanUploads
     : cleanUploads

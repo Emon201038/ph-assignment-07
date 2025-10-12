@@ -32,7 +32,6 @@ const logout = catchAsync(async (req, res, _next) => {
 
 const me = catchAsync(async (req, res, _next) => {
   const header = req.headers.authorization;
-  console.log("headers", header);
   sendResponse(res, {
     statusCode: 200,
     success: true,

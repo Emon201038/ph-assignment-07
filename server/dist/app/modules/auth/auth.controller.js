@@ -44,7 +44,6 @@ const logout = (0, catchAsync_1.catchAsync)((req, res, _next) => __awaiter(void 
 }));
 const me = (0, catchAsync_1.catchAsync)((req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
     const header = req.headers.authorization;
-    console.log("headers", header);
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: 200,
         success: true,

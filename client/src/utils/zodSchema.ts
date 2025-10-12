@@ -1,4 +1,12 @@
-import { z } from "zod";
+import { email, z } from "zod";
+
+export const loginSchema = z.object({
+  email: z.string().email(),
+  password: z
+    .string()
+    .min(6, { error: "Password should be minimum 6 charecters" }),
+});
+
 export const createProjectSchema = z.object({
   title: z.string().min(2, { error: "Title should be minimum 2 charecters" }),
   description: z
@@ -36,3 +44,4 @@ export const updateProjectSchema = createProjectSchema.extend({
 // ✅ Type inference
 export type CreateProjectSchemaType = z.infer<typeof createProjectSchema>;
 export type UpdateProjectSchemaType = z.infer<typeof updateProjectSchema>;
+export type LoginSchemaType = z.infer<typeof loginSchema>;

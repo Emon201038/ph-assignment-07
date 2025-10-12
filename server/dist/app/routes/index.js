@@ -8,26 +8,31 @@ const user_routes_1 = __importDefault(require("../modules/user/user.routes"));
 const project_routes_1 = __importDefault(require("../modules/project/project.routes"));
 const blog_routes_1 = __importDefault(require("../modules/blog/blog.routes"));
 const auth_routes_1 = __importDefault(require("../modules/auth/auth.routes"));
+const admin_routes_1 = __importDefault(require("../modules/admin/admin.routes"));
 const router = express_1.default.Router();
 const routes = [
     {
         path: "/user",
-        route: user_routes_1.default
+        route: user_routes_1.default,
     },
     {
         path: "/project",
-        route: project_routes_1.default
+        route: project_routes_1.default,
     },
     {
         path: "/blog",
-        route: blog_routes_1.default
+        route: blog_routes_1.default,
     },
     {
         path: "/auth",
-        route: auth_routes_1.default
+        route: auth_routes_1.default,
+    },
+    {
+        path: "/admin",
+        route: admin_routes_1.default,
     },
 ];
-routes.forEach(r => {
+routes.forEach((r) => {
     router.use(r.path, r.route);
 });
 exports.default = router;

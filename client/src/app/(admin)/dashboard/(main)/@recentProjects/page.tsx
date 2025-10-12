@@ -12,14 +12,27 @@ import { getProjects } from "@/lib/fetch-data";
 import Image from "next/image";
 import Link from "next/link";
 import MoreButton from "@/components/more-button";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function RecentProjects() {
-  const res = await getProjects({
-    page: "1",
-    limit: "6",
-    sortBy: "createdAt",
-    sortOrder: "desc",
-  });
+  const session = await auth();
+  if (!session?.token) {
+    redirect("/login?redirect=/dashboard");
+  }
+  const res = await getProjects(
+    {
+      page: "1",
+      limit: "6",
+      sortBy: "createdAt",
+      sortOrder: "desc",
+    },
+    {
+      headers: {
+        authorization: session.token,
+      },
+    }
+  );
   return (
     <Card>
       <CardHeader>

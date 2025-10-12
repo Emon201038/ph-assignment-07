@@ -1,9 +1,20 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAdminStats } from "@/lib/fetch-data";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 const Analytics = async () => {
-  const res = await getAdminStats({ next: { tags: ["stats"] } });
+  const session = await auth();
+  if (!session?.token) {
+    redirect("/login?redirect=/dashboard");
+  }
+  const res = await getAdminStats({
+    headers: {
+      authorization: session.token,
+    },
+    next: { tags: ["stats"] },
+  });
 
   const statsArray = Object.entries(res.data).map(([key, value]) => ({
     label: key

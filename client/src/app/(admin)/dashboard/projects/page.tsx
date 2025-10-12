@@ -8,22 +8,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, ExternalLink } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { Plus, Edit, ExternalLink } from "lucide-react";
+
 import { getProjects } from "@/lib/fetch-data";
 import DeleteButton from "./delete-button";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function DashboardProjectsPage() {
+  const session = await auth();
+  if (!session?.token) {
+    redirect("/login?redirect=/dashboard/projects");
+  }
   const res = await getProjects(
     {
       page: "1",
@@ -32,6 +28,9 @@ export default async function DashboardProjectsPage() {
       sortOrder: "desc",
     },
     {
+      headers: {
+        authorization: session.token,
+      },
       next: { tags: ["projects"] },
     }
   );

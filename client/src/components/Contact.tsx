@@ -62,7 +62,6 @@ const Contact = () => {
       );
       const status = response.status;
       const result = await response.text();
-      console.log(result);
       if (status === 200) {
         setSubmitStatus("success");
         setFormData({ name: "", email: "", subject: "", message: "" });
