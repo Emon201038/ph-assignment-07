@@ -43,9 +43,12 @@ const ProjectDetails = ({ project }: { project: IProject }) => {
               </h1>
               {project.featured && <Badge>Featured</Badge>}
             </div>
-            <p className="text-lg text-muted-foreground">
-              {project.description}
-            </p>
+            <div
+              className="text-lg text-muted-foreground"
+              dangerouslySetInnerHTML={{ __html: project.description }}
+            >
+              {/* {project.description} */}
+            </div>
           </div>
 
           <img
@@ -68,9 +71,10 @@ const ProjectDetails = ({ project }: { project: IProject }) => {
                 <CardTitle>About This Project</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground leading-relaxed">
-                  {project.description}
-                </p>
+                <div
+                  className="text-muted-foreground leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: project.description }}
+                ></div>
               </CardContent>
             </Card>
           )}

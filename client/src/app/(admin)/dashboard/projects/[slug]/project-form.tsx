@@ -26,6 +26,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -38,6 +39,8 @@ import ProjectDetails from "./project-details";
 import toast from "react-hot-toast";
 import { invalidateCache } from "@/actions";
 import { useSession } from "next-auth/react";
+import { Editor } from "@/components/editor";
+import { RHFSelect } from "@/components/rhf-select";
 
 export default function ProjectDetailPage({ project }: { project: IProject }) {
   const searchParams = useSearchParams();
@@ -105,6 +108,34 @@ export default function ProjectDetailPage({ project }: { project: IProject }) {
     return <ProjectDetails project={project} />;
   }
 
+  const handleImageChange = async (file: File) => {
+    if (file) {
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "ml_default");
+        formData.append(
+          "api_key",
+          `${process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY}`
+        );
+        formData.append("timestamp", `${Date.now()}`);
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        const data = await res.json();
+        console.log(data);
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <div className="px-6 py-8">
       <div className="mx-auto max-w-3xl space-y-8">
@@ -137,11 +168,27 @@ export default function ProjectDetailPage({ project }: { project: IProject }) {
                   label="Title *"
                   placeholder="My Awesome Project"
                 />
-                <RHFTextarea
-                  control={form.control}
+                <FormField
                   name="description"
-                  label="Description *"
-                  placeholder="A brief description of your project"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className="space-y-2">
+                      <FormLabel>Project Description *</FormLabel>
+                      <FormControl>
+                        <Editor
+                          {...field}
+                          value={field.value}
+                          onChange={field.onChange}
+                          onImageUpload={handleImageChange}
+                          placeholder="A brif description of the project"
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Supports Markdown formatting
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
                 <RHFInput
                   control={form.control}
@@ -244,6 +291,17 @@ export default function ProjectDetailPage({ project }: { project: IProject }) {
                       <FormMessage />
                     </FormItem>
                   )}
+                />
+                <RHFSelect
+                  control={form.control}
+                  name="details.status"
+                  label="Status *"
+                  placeholder="Select a status"
+                  options={[
+                    { id: "1", label: "Active", value: "active" },
+                    { id: "2", label: "Draft", value: "draft" },
+                    { id: "3", label: "Archived", value: "archived" },
+                  ]}
                 />
 
                 <div className="flex gap-4">

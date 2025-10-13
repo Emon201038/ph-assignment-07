@@ -1,5 +1,6 @@
 "use client";
 import { invalidateCache } from "@/actions";
+import { Editor } from "@/components/editor";
 import { RHFInput } from "@/components/rhf-input";
 import { RHFSelect } from "@/components/rhf-select";
 import { RHFTextarea } from "@/components/rhf-textarea";
@@ -28,6 +29,7 @@ import {
 } from "@/utils/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Upload } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -36,6 +38,7 @@ const serverUrl = process.env.NEXT_PUBLIC_API_URL;
 const CreateProjectForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const session = useSession();
 
   const form = useForm({
     resolver: zodResolver(createProjectSchema),
@@ -62,8 +65,8 @@ const CreateProjectForm = () => {
 
   const handleSubmit = async (value: CreateProjectSchemaType) => {
     setIsLoading(true);
+    const toastId = toast.loading("Creating project...");
     try {
-      const toastId = toast.loading("Creating project...");
       const formData = new FormData();
       formData.append("title", value.title);
       formData.append("description", value.description);
@@ -81,6 +84,9 @@ const CreateProjectForm = () => {
         method: "POST",
         credentials: "include",
         body: formData,
+        headers: {
+          authorization: session?.data?.token as string,
+        },
       });
       const data = await res.json();
       if (data?.success) {
@@ -90,12 +96,42 @@ const CreateProjectForm = () => {
         invalidateCache("stats");
         router.push(`/dashboard/projects/${data.data.slug}`);
       } else {
-        toast.error("Failed to create project. Reason: " + data?.message);
+        toast.error("Failed to create project. Reason: " + data?.message, {
+          id: toastId,
+        });
       }
     } catch (error) {
       toast.error("Failed to create Project. " + (error as any)?.message);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleImageChange = async (file: File) => {
+    if (file) {
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "ml_default");
+        formData.append(
+          "api_key",
+          `${process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY}`
+        );
+        formData.append("timestamp", `${Date.now()}`);
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        const data = await res.json();
+        console.log(data);
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
   return (
@@ -119,11 +155,28 @@ const CreateProjectForm = () => {
               label="Project Title *"
               placeholder="E-commerce Platform"
             />
-            <RHFTextarea
-              control={form.control}
+
+            <FormField
               name="description"
-              label="Project Description *"
-              placeholder="A brif description of the project"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel>Project Description *</FormLabel>
+                  <FormControl>
+                    <Editor
+                      {...field}
+                      value={field.value}
+                      onChange={field.onChange}
+                      onImageUpload={handleImageChange}
+                      placeholder="A brif description of the project"
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Supports Markdown formatting
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
 
             <FormField

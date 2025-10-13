@@ -28,9 +28,10 @@ export function ProjectDetails({ project }: { project: IProject }) {
             </Badge>
           )}
         </div>
-        <p className="text-xl text-muted-foreground max-w-3xl mx-auto text-pretty leading-relaxed">
-          {project.description}
-        </p>
+        <div
+          className="text-xl text-muted-foreground max-w-3xl mx-auto text-pretty leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: project.description }}
+        ></div>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
           {project.github && (
             <div

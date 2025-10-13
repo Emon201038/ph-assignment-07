@@ -21,6 +21,26 @@ export interface IProject {
   };
 }
 
+export interface IBlog {
+  _id: string;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt: string;
+  author: string;
+  tags?: string[];
+  image: {
+    url: string;
+    pub_id: string;
+  };
+  featured: boolean;
+  views?: number;
+  readTime: number;
+  status: "active" | "draft" | "archived";
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface IUser {
   _id: string;
   name: string;

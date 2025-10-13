@@ -1,16 +1,20 @@
 import { Document, Schema } from "mongoose";
 
-export interface IBlog extends Document  {
+export interface IBlog extends Document {
   title: string;
-  slug: string; 
+  slug: string;
   content: string;
+  excerpt: string;
   author: Schema.Types.ObjectId;
   tags?: string[];
-  category?: string;
-  coverImage?: string;
-  published: boolean;
-  likes?: number;
+  image: {
+    url: string;
+    pub_id: string;
+  };
+  featured: boolean;
   views?: number;
-  commentsCount?: number;
-  readTime: string
+  readTime: number;
+  status: "active" | "draft" | "archived";
+  createdAt: Date;
+  updatedAt: Date;
 }

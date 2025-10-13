@@ -32,7 +32,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             {/* <ExternalLink className="h-5 w-5 text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0" /> */}
           </div>
 
-          <p className="text-muted-foreground leading-relaxed">{description}</p>
+          <div
+            className="text-muted-foreground leading-relaxed line-clamp-3"
+            dangerouslySetInnerHTML={{ __html: description }}
+          ></div>
 
           <div className="flex flex-wrap gap-2">
             {techStack.map((tech) => (

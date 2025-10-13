@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { ModeToggle } from "./theme-toggle";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export const scrollToHash = (hash: string) => {
   const element = document.querySelector(hash);
@@ -20,6 +21,7 @@ const Navigation = () => {
 
   const pathname = usePathname();
   const router = useRouter();
+  const session = useSession();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,6 +38,8 @@ const Navigation = () => {
     { name: "Projects", href: "#projects" },
     { name: "Skills", href: "#skills" },
     { name: "Contact", href: "#contact" },
+    { name: "Blogs", href: "#blogs" },
+    { name: "Dashboard", href: "/dashboard" },
   ];
 
   const handleNavClick = (hash: string) => {
@@ -94,18 +98,27 @@ const Navigation = () => {
             {/* Desktop Navigation */}
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
-                {navItems.map((item, index) => (
-                  <motion.button
-                    key={item.name}
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 * index }}
-                    onClick={() => handleNavClick(item.href)}
-                    className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-                  >
-                    {item.name}
-                  </motion.button>
-                ))}
+                {navItems.map((item, index) => {
+                  if (item.name === "Dashboard" && !session.data?.user) {
+                    return null;
+                  }
+                  return (
+                    <motion.button
+                      key={item.name}
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 * index }}
+                      onClick={() =>
+                        item.href === "/dashboard"
+                          ? router.push(item.href)
+                          : handleNavClick(item.href)
+                      }
+                      className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                    >
+                      {item.name}
+                    </motion.button>
+                  );
+                })}
               </div>
             </div>
 

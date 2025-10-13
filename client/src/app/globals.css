@@ -85,16 +85,43 @@ body {
   }
 }
 
-/* .ql-container {
+.dark .ql-editor.ql-blank::before {
+  @apply text-muted-foreground opacity-70; /* shadcn-friendly color */
+  font-style: normal; /* optional, removes italic look */
+}
+.ql-container.ql-snow {
   height: auto;
+}
+/* Toolbar container */
+.dark .ql-toolbar {
+  @apply border border-input bg-muted text-foreground rounded-t-md;
 }
 
-.ql-toolbar {
-  height: auto;
+/* Toolbar buttons (icons) */
+.dark .ql-toolbar button {
+  @apply text-white hover:text-foreground;
 }
-.ql-editor {
-  height: auto;
-} */
+
+/* When active (bold/italic selected, etc.) */
+.ql-toolbar button.ql-active {
+  @apply text-foreground bg-muted-foreground/10;
+}
+
+/* Dropdown arrows (color icon, header dropdown, etc.) */
+.ql-toolbar .ql-picker-label {
+  @apply text-muted-foreground hover:text-foreground;
+}
+
+.ql-toolbar .ql-picker-options {
+  @apply bg-popover border border-input rounded-md;
+}
+
+.ql-container.ql-snow {
+  @apply rounded-b-md;
+}
+.ql-toolbar.ql-snow {
+  @apply rounded-t-md;
+}
 
 :root {
   --radius: 0.65rem;

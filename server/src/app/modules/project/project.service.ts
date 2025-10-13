@@ -71,11 +71,17 @@ const updateProject = async (
   slug: string,
   projectData: Partial<CreateProjectSchemaType>
 ) => {
+  console.log(projectData);
   const existingProject = await Project.findOne({ slug });
   if (!existingProject) throw new AppError(404, "No Project Found");
 
-  const detailsUpdate: any = {};
-
+  existingProject.title = projectData.title as string;
+  existingProject.description = projectData.description as string;
+  existingProject.live = projectData.live as string;
+  existingProject.github = projectData.github as string;
+  existingProject.featured = JSON.parse(
+    projectData.featured as unknown as string
+  );
   if (projectData.details?.techStack) {
     existingProject.details.techStack = projectData.details.techStack
       .split(",")

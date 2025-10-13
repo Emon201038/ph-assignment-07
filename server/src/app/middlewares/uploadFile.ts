@@ -2,7 +2,7 @@ import multer from "multer";
 
 const storage = multer.memoryStorage();
 
-export const uploadProjectImage = multer({
+export const uploadImage = multer({
   storage,
   fileFilter: function (req, file, cb) {
     if (file.mimetype.startsWith("image")) {

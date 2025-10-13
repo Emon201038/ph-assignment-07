@@ -73,9 +73,10 @@ export default async function RecentProjects() {
                     <h3 className="font-semibold text-balance">
                       {project.title}
                     </h3>
-                    <p className="mt-1 text-sm text-muted-foreground text-pretty">
-                      {project.description}
-                    </p>
+                    <div
+                      className="mt-1 text-sm text-muted-foreground text-pretty line-clamp-4"
+                      dangerouslySetInnerHTML={{ __html: project.description }}
+                    ></div>
                   </div>
                   <MoreButton
                     type="project"

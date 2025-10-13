@@ -71,8 +71,11 @@ export default async function DashboardProjectsPage() {
                     <Badge variant="secondary">Featured</Badge>
                   )}
                 </div>
-                <CardDescription className="line-clamp-2">
-                  {project.description}
+                <CardDescription
+                  className="line-clamp-2"
+                  dangerouslySetInnerHTML={{ __html: project.description }}
+                >
+                  {/* {project.description} */}
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex-1 flex flex-col gap-4">

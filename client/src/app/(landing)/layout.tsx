@@ -20,8 +20,8 @@ const LandingLayout = ({
       <About />
       {projects}
       <Skills />
-      <Blogs />
-      {/* {blogs} */}
+      {/* <Blogs /> */}
+      {blogs}
       <Contact />
       <Footer />
     </>

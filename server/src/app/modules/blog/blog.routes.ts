@@ -1,15 +1,36 @@
 import express from "express";
-import { sendResponse } from "../../utils/sendResponse";
-import Blog from "./blog.model";
+import { BlogController } from "./blog.controller";
+import { uploadImage } from "../../middlewares/uploadFile";
+import { validateRequest } from "../../middlewares/validateRequest";
+import { createBlogSchema } from "./blog.validation";
+import { checkAuth } from "../../middlewares/checkAuth";
 
 const blogRouter = express.Router();
 
-blogRouter.get("/",async(_req,res,_next)=>{
-    sendResponse(res,{
-        statusCode:200,
-        message: "Blogs retrived successfully",
-        data: await Blog.find()
-    })
-})
+blogRouter
+  .route("/")
+  .get(BlogController.getAllBlogs)
+  .post(
+    uploadImage.single("image"),
+    validateRequest(createBlogSchema),
+    checkAuth("ADMIN", "SUPER_ADMIN"),
+    BlogController.createBlog
+  );
 
-export default blogRouter
+blogRouter
+  .route("/:slug")
+  .get(BlogController.getBlogBySlug)
+  .put(
+    checkAuth("ADMIN", "SUPER_ADMIN"),
+    validateRequest(createBlogSchema),
+    BlogController.updateBlog
+  )
+  .delete(checkAuth("ADMIN", "SUPER_ADMIN"), BlogController.deleteBlog);
+
+blogRouter.patch(
+  "/:slug/archive",
+  checkAuth("ADMIN", "SUPER_ADMIN"),
+  BlogController.archiveBlog
+);
+
+export default blogRouter;

@@ -2,7 +2,7 @@ import express from "express";
 import { ProjectController } from "./project.controller";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { createProjectSchema } from "./project.validation";
-import { uploadProjectImage } from "../../middlewares/uploadFile";
+import { uploadImage } from "../../middlewares/uploadFile";
 import { checkAuth } from "../../middlewares/checkAuth";
 
 const projectRouter = express.Router();
@@ -11,7 +11,7 @@ projectRouter
   .route("/")
   .get(ProjectController.getAllProjects)
   .post(
-    uploadProjectImage.single("image"),
+    uploadImage.single("image"),
     validateRequest(createProjectSchema),
     checkAuth("ADMIN", "SUPER_ADMIN"),
     ProjectController.createProject

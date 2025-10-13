@@ -35,6 +35,7 @@
     "react-hot-toast": "^2.6.0",
     "react-intersection-observer": "^9.16.0",
     "react-markdown": "^10.1.0",
+    "react-quill-new": "^3.6.0",
     "react-quilljs": "^2.0.5",
     "rehype-highlight": "^7.0.2",
     "tailwind-merge": "^3.3.1",

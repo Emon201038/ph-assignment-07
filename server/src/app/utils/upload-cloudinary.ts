@@ -16,6 +16,7 @@ export const uploadStreamToCloudinary = (
       { folder, resource_type: resourceType },
       (error, result) => {
         if (error || !result) return reject(error);
+        console.log(result, "upload result");
         resolve({ url: result.secure_url, pub_id: result.public_id });
       }
     );
