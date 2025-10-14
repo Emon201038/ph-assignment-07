@@ -68,7 +68,11 @@ const updateProject = (slug, projectData) => __awaiter(void 0, void 0, void 0, f
     const existingProject = yield project_model_1.default.findOne({ slug });
     if (!existingProject)
         throw new appError_1.default(404, "No Project Found");
-    const detailsUpdate = {};
+    existingProject.title = projectData.title;
+    existingProject.description = projectData.description;
+    existingProject.live = projectData.live;
+    existingProject.github = projectData.github;
+    existingProject.featured = JSON.parse(projectData.featured);
     if ((_a = projectData.details) === null || _a === void 0 ? void 0 : _a.techStack) {
         existingProject.details.techStack = projectData.details.techStack
             .split(",")

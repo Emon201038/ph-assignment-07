@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useMemo } from "react";
-import { useQuill } from "react-quilljs";
-import "quill/dist/quill.snow.css";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import ReactQuill from "react-quill-new";
+import "quill/dist/quill.snow.css";
 
 interface EditorProps {
   value: string;
@@ -18,9 +17,10 @@ export const Editor = ({
   onChange,
   onImageUpload,
 }: EditorProps) => {
-  const editorRef = React.useRef(null);
-  const theme = "snow";
+  const editorRef = useRef<ReactQuill | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
+  // ✅ Image upload handler
   const imageHandler = async () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -29,28 +29,27 @@ export const Editor = ({
 
     input.onchange = async () => {
       const file = input.files?.[0];
-      console.log(file);
       if (file && onImageUpload) {
         try {
           const url = await onImageUpload(file);
-          const editor = (editorRef?.current as any)?.getEditor();
-
+          const editor = editorRef.current?.getEditor();
           const range = editor?.getSelection(true);
           editor?.insertEmbed(range?.index || 0, "image", url.secure_url);
-        } catch (error) {
-          console.log(error);
+        } catch (err) {
+          console.error(err);
         }
       }
     };
   };
 
-  const modules = useMemo(() => {
-    return {
+  // ✅ Toolbar modules
+  const modules = useMemo(
+    () => ({
       toolbar: {
         container: [
           ["bold", "italic", "underline", "strike"],
           ["blockquote", "code-block"],
-          ["link", "image"], // ✅ Only keep what's used
+          ["link", "image"],
           [{ header: 1 }, { header: 2 }],
           [{ list: "ordered" }, { list: "bullet" }],
           [{ script: "sub" }, { script: "super" }],
@@ -66,70 +65,40 @@ export const Editor = ({
           image: imageHandler,
         },
       },
-    };
-  }, []);
+    }),
+    []
+  );
 
-  const formats = [
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "align",
-    "list",
-    "indent",
-    "header",
-    "link",
-    "color",
-  ];
+  // ✅ Initialize HTML after editor mounts
+  useEffect(() => {
+    const editor = editorRef.current?.getEditor();
+    if (!editor) return;
 
-  const { quill, quillRef } = useQuill({
-    theme,
-    modules,
-    formats,
-    placeholder,
-  });
-
-  React.useEffect(() => {
-    if (!quill) return;
-
-    // Set default direction + alignment
-    quill.format("direction", "ltr");
-    quill.format("align", "left");
-
-    // Only set initial value once
-    const currentContent = quill.root.innerHTML.trim();
-    if (value && currentContent === "<p><br></p>") {
-      quill.clipboard.dangerouslyPasteHTML(value);
+    if (!isInitialized && value) {
+      // Clear any default <p><br></p>
+      editor.root.innerHTML = "";
+      editor.clipboard.dangerouslyPasteHTML(value);
+      setIsInitialized(true);
     }
+  }, [value, isInitialized]);
 
-    // Handle change events
-    const handleChange = () => {
-      onChange(quill.root.innerHTML);
-    };
-
-    quill.on("text-change", handleChange);
-
-    return () => {
-      quill.off("text-change", handleChange);
-    };
-  }, [quill, onChange]);
+  // ✅ Sync back HTML changes
+  const handleChange = () => {
+    const editor = editorRef.current?.getEditor();
+    if (editor) {
+      const html = editor.root.innerHTML;
+      onChange(html);
+    }
+  };
 
   return (
-    // <div
-    //   dir="ltr"
-    //   className="*:rounded-md *:first:rounded-b-none *:last:rounded-t-none *:last:min-h-20 *:placeholder:text-muted-foreground placeholder:text-muted-foreground h-full"
-    // >
-    //   <div ref={quillRef} className="" />
-    // </div>
     <ReactQuill
       ref={editorRef}
-      theme={theme}
+      theme="snow"
       modules={modules}
-      // formats={formats}
       placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      className=""
+      onChange={handleChange}
+      // className="min-h-[250px] bg-white"
     />
   );
 };

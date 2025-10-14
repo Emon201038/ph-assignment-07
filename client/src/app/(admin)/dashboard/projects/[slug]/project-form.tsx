@@ -14,8 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Edit, ExternalLink, Github, Zap } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { IProject } from "@/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,7 +32,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { RHFInput } from "@/components/rhf-input";
-import { RHFTextarea } from "@/components/rhf-textarea";
 import { Input } from "@/components/ui/input";
 import ProjectDetails from "./project-details";
 import toast from "react-hot-toast";
@@ -128,16 +126,16 @@ export default function ProjectDetailPage({ project }: { project: IProject }) {
         );
 
         const data = await res.json();
-        console.log(data);
         return data;
       } catch (error) {
         console.log(error);
+        toast.error("Failed to upload image");
       }
     }
   };
 
   return (
-    <div className="px-6 py-8">
+    <div className="py-8">
       <div className="mx-auto max-w-3xl space-y-8">
         <div>
           <Button variant="ghost" asChild className="mb-4">

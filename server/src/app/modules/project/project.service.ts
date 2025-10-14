@@ -71,7 +71,6 @@ const updateProject = async (
   slug: string,
   projectData: Partial<CreateProjectSchemaType>
 ) => {
-  console.log(projectData);
   const existingProject = await Project.findOne({ slug });
   if (!existingProject) throw new AppError(404, "No Project Found");
 

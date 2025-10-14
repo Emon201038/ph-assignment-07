@@ -3,7 +3,6 @@ import { invalidateCache } from "@/actions";
 import { Editor } from "@/components/editor";
 import { RHFInput } from "@/components/rhf-input";
 import { RHFSelect } from "@/components/rhf-select";
-import { RHFTextarea } from "@/components/rhf-textarea";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -127,10 +126,10 @@ const CreateProjectForm = () => {
         );
 
         const data = await res.json();
-        console.log(data);
         return data;
       } catch (error) {
         console.log(error);
+        toast.error("Failed to upload image");
       }
     }
   };

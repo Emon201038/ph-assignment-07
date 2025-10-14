@@ -53,11 +53,9 @@ const Projects = ({ projects = [] }: { projects: IProject[] }) => {
             </motion.p>
           </div>
           <div className="space-y-16">
-            {projects
-              // .filter((project) => project.featured)
-              ?.map((project, index) => (
-                <ProjectCard key={project._id} project={project} />
-              ))}
+            {projects?.map((project, index) => (
+              <ProjectCard key={project._id} project={project} />
+            ))}
           </div>
         </div>
 

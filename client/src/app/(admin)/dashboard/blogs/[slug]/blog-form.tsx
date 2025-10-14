@@ -1,3 +1,4 @@
+import { invalidateCache } from "@/actions";
 import { Editor } from "@/components/editor";
 import { RHFInput } from "@/components/rhf-input";
 import { RHFSelect } from "@/components/rhf-select";
@@ -20,47 +21,23 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
+import { IBlog } from "@/types";
 import { updateBlogSchema, UpdateBlogSchemaType } from "@/utils/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
-const BlogForm = () => {
+const BlogForm = ({ post }: { post: IBlog }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isEditMode = searchParams.get("isEditMode") === "true";
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const post = {
-    id: "1",
-    slug: "getting-started-with-nextjs",
-    title: "Getting Started with Next.js 15",
-    excerpt:
-      "Learn the fundamentals of Next.js 15 and build your first application",
-    content: `# Getting Started with Next.js 15
-  
-  Next.js 15 brings exciting new features and improvements. In this guide, we'll explore the basics and build a simple application.
-  
-  ## What's New in Next.js 15
-  
-  - Improved performance
-  - Better developer experience
-  - Enhanced routing capabilities
-  
-  ## Building Your First App
-  
-  Let's start by creating a new Next.js project...`,
-    coverImage: "/nextjs-coding-tutorial.jpg",
-    tags: ["Next.js", "React", "Tutorial"],
-    status: "active" as "active" | "draft" | "archived",
-    featured: true,
-    createdAt: "2024-01-05",
-    updatedAt: "2024-01-05",
-    readTime: "5 min read",
-  };
+  const session = useSession();
 
   const form = useForm({
     resolver: zodResolver(updateBlogSchema),
@@ -69,7 +46,7 @@ const BlogForm = () => {
       excerpt: post.excerpt,
       content: post.content,
       tags: post.tags.join(","),
-      readTime: post.readTime,
+      readTime: post.readTime.toString(),
       status: post.status,
       featured: post.featured,
     },
@@ -77,19 +54,32 @@ const BlogForm = () => {
 
   const handleSubmit = async (value: UpdateBlogSchemaType) => {
     setIsSubmitting(true);
-
     try {
-      // updatePost(post.id, {
-      //   ...formData,
-      //   tags: formData.tags
-      //     .split(",")
-      //     .map((t) => t.trim())
-      //     .filter(Boolean),
-      // })
-      // router.push("/dashboard/blogs")
-      console.log(value);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/blog/${post.slug}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: session?.data?.token as string,
+          },
+          body: JSON.stringify(value),
+          credentials: "include",
+        }
+      );
+      if (!response.ok) {
+        toast.error("Failed to update blog");
+      } else {
+        const data = await response.json();
+        toast.success("Project updated successfully");
+        await invalidateCache(post.slug);
+        await invalidateCache("blogs");
+        router.push(`/dashboard/blogs/${data?.data?.slug}?isEditMode=false`);
+      }
     } catch (error) {
-      console.error("Failed to update blog post:", error);
+      toast.error(
+        "Failed to update project. Reason: " + (error as Error).message
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -115,9 +105,9 @@ const BlogForm = () => {
         );
 
         const data = await res.json();
-        console.log(data);
         return data;
       } catch (error) {
+        toast.error("Failed to upload image");
         console.log(error);
       }
     }

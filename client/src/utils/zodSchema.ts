@@ -50,10 +50,8 @@ export const createBlogSchema = z.object({
   content: z
     .string()
     .min(2, { error: "Content should be minimum 2 charecters" }),
-  tags: z.string().optional(),
-  readTime: z
-    .string()
-    .min(2, { error: "Read time should be minimum 2 charecters" }),
+  tags: z.string().min(1, { error: "At least one tag is required" }),
+  readTime: z.string().min(1, { error: "Read time should be minimum 1" }),
   status: z.enum(["active", "draft", "archived"]).default("active"),
   featured: z.boolean().default(false),
 });

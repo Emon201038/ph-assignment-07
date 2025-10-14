@@ -13,7 +13,7 @@ const projectRouter = express_1.default.Router();
 projectRouter
     .route("/")
     .get(project_controller_1.ProjectController.getAllProjects)
-    .post(uploadFile_1.uploadProjectImage.single("image"), (0, validateRequest_1.validateRequest)(project_validation_1.createProjectSchema), (0, checkAuth_1.checkAuth)("ADMIN", "SUPER_ADMIN"), project_controller_1.ProjectController.createProject);
+    .post(uploadFile_1.uploadImage.single("image"), (0, validateRequest_1.validateRequest)(project_validation_1.createProjectSchema), (0, checkAuth_1.checkAuth)("ADMIN", "SUPER_ADMIN"), project_controller_1.ProjectController.createProject);
 projectRouter
     .route("/:slug")
     .get(project_controller_1.ProjectController.getProjectBySlug)

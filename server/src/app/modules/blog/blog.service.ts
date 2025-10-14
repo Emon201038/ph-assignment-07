@@ -18,12 +18,14 @@ const getAllBlogs = async (query: Record<string, string>) => {
 
 const createBlog = async (
   blogData: CreateBlogSchemaType,
-  file: Express.Multer.File
+  file: Express.Multer.File,
+  authorId: string
 ) => {
   const payload = {
     ...blogData,
     slug: "",
     tags: [""],
+    author: authorId,
   };
   if (file) {
     const uploadedFile = await uploadFilesToCloudinary(file, "blogs");
@@ -61,13 +63,15 @@ const updateBLog = async (
   slug: string,
   blogData: Partial<CreateBlogSchemaType>
 ) => {
-  console.log(blogData);
   const existingBlog = await Blog.findOne({ slug });
   if (!existingBlog) throw new AppError(404, "No Project Found");
 
   existingBlog.title = blogData.title as string;
   existingBlog.content = blogData.content as string;
   existingBlog.featured = JSON.parse(blogData.featured as unknown as string);
+  existingBlog.status = blogData.status as "active" | "draft" | "archived";
+  existingBlog.excerpt = blogData.excerpt as string;
+  existingBlog.readTime = Number(blogData.readTime);
 
   if (blogData?.tags) {
     existingBlog.tags = blogData.tags.split(",").map((tag) => tag.trim());

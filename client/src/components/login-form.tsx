@@ -18,8 +18,8 @@ export function LoginForm() {
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: (process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL as string) || "",
+      password: (process.env.NEXT_PUBLIC_SUPER_ADMIN_PASSWORD as string) || "",
     },
   });
 
@@ -29,11 +29,15 @@ export function LoginForm() {
     const tostId = toast.loading("Signing in...");
     setIsLoading(true);
     try {
-      await signIn("credentials", {
+      const res = await signIn("credentials", {
         email: value.email,
         password: value.password,
         redirect: false,
       });
+      if (res?.error) {
+        toast.error("Invalide credentials.", { id: tostId });
+        return;
+      }
       toast.success("Signed in successfully", { id: tostId });
       router.push("/dashboard");
     } catch (error) {

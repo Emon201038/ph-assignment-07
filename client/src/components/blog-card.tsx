@@ -29,7 +29,7 @@ export function BlogCard({
   readTime,
 }: BlogCardProps) {
   return (
-    <Link href={`/blog/${slug}`} className="group">
+    <Link href={`/blogs/${slug}`} className="group">
       <Card className="h-full overflow-hidden transition-all hover:shadow-lg">
         <div className="relative h-48 w-full overflow-hidden">
           <img

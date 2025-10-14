@@ -1,5 +1,6 @@
 import { BlogCard } from "@/components/blog-card";
 import { Button } from "@/components/ui/button";
+import { getBlogs } from "@/lib/fetch-data";
 import Link from "next/link";
 
 async function getFeaturedBlogs() {
@@ -33,10 +34,22 @@ async function getFeaturedBlogs() {
 }
 
 export default async function BlogsSlot() {
-  const blogs = await getFeaturedBlogs();
+  const res = await getBlogs(
+    {
+      page: "1",
+      limit: "5",
+      sortBy: "createdAt",
+      sortOrder: "desc",
+      status: "active",
+      featured: "true",
+    },
+    { next: { tags: ["blogs"] } }
+  );
+
+  const blogs = res.data.blogs;
 
   return (
-    <section id="blog" className="px-6 py-16 md:py-24 bg-muted/30">
+    <section id="blogs" className="px-6 py-16 md:py-24 bg-muted/30">
       <div className="mx-auto max-w-6xl">
         <div className="flex items-center justify-between mb-12">
           <h2 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
@@ -47,18 +60,24 @@ export default async function BlogsSlot() {
           </Button>
         </div>
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {blogs.map((post) => (
-            <BlogCard
-              key={post._id}
-              title={post.title}
-              excerpt={post.excerpt}
-              coverImage={post.image.url}
-              tags={post.tags}
-              slug={post.slug}
-              createdAt={post.createdAt}
-              readTime={post.readTime}
-            />
-          ))}
+          {blogs.length === 0 ? (
+            <div className="md:col-span-2 lg:col-span-3 text-center text-lg font-semibold">
+              No blogs found
+            </div>
+          ) : (
+            blogs.map((post) => (
+              <BlogCard
+                key={post._id}
+                title={post.title}
+                excerpt={post.excerpt}
+                coverImage={post.image.url}
+                tags={post.tags}
+                slug={post.slug}
+                createdAt={post.createdAt}
+                readTime={post.readTime}
+              />
+            ))
+          )}
         </div>
       </div>
     </section>

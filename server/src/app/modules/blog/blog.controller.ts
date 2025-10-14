@@ -15,12 +15,14 @@ const getAllBlogs = catchAsync(async (req, res) => {
 
 const createBlog = catchAsync(async (req, res) => {
   const blogData = req.body as CreateBlogSchemaType;
+  const author = req.user;
   sendResponse(res, {
     statusCode: 201,
     message: "Blog created successfully",
     data: await BlogService.createBlog(
       blogData,
-      req.file as Express.Multer.File
+      req.file as Express.Multer.File,
+      author?.id as string
     ),
   });
 });

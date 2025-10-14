@@ -32,7 +32,7 @@ export const getProjectBySlug = async (
 export const getBlogs = async (
   query?: Record<string, string>,
   init?: RequestInit
-): Promise<IApiResponse<{ projects: IBlog[]; meta: IMeta }>> => {
+): Promise<IApiResponse<{ blogs: IBlog[]; meta: IMeta }>> => {
   try {
     const queryString = new URLSearchParams(query).toString();
     const response = await fetch(

@@ -37,7 +37,7 @@ export default async function DashboardProjectsPage() {
   const projects = res.data.projects || [];
 
   return (
-    <div className="px-6 py-8">
+    <div className="py-8">
       <div className="mx-auto max-w-7xl space-y-8">
         <div className="flex items-center justify-between">
           <div>
@@ -105,7 +105,11 @@ export default async function DashboardProjectsPage() {
                       <ExternalLink className="h-4 w-4" />
                     </Link>
                   </Button>
-                  <DeleteButton project={project} />
+                  <DeleteButton
+                    slug={project.slug}
+                    title={project.title}
+                    type={"project"}
+                  />
                 </div>
               </CardContent>
             </Card>

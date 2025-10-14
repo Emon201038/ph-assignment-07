@@ -1,4 +1,5 @@
 "use client";
+import { invalidateCache } from "@/actions";
 import { Editor } from "@/components/editor";
 import { RHFInput } from "@/components/rhf-input";
 import { RHFTextarea } from "@/components/rhf-textarea";
@@ -23,9 +24,15 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { createBlogSchema, CreateBlogSchemaType } from "@/utils/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Upload } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+
+const serverUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const CreateBlogForm = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -42,14 +49,45 @@ const CreateBlogForm = () => {
       featured: false,
     },
   });
+  const session = useSession();
+  const router = useRouter();
 
   const handleSubmit = async (value: CreateBlogSchemaType) => {
     setIsSubmitting(true);
-
+    const toastId = toast.loading("Creating project...");
     try {
-      console.log(value);
+      const formData = new FormData();
+      formData.append("title", value.title);
+      formData.append("excerpt", value.excerpt);
+      formData.append("content", value.content); // File object
+      formData.append("tags", value.tags);
+      formData.append("readTime", value.readTime.toString());
+      formData.append("status", value.status);
+      formData.append("featured", value.featured.toString());
+      formData.append("image", value.image);
+
+      const res = await fetch(`${serverUrl}/api/v1/blog`, {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+        headers: {
+          authorization: session?.data?.token as string,
+        },
+      });
+      const data = await res.json();
+      if (data?.success) {
+        toast.success("Blog created successfull.", { id: toastId });
+        form.reset();
+        invalidateCache("blogs");
+        invalidateCache("stats");
+        router.push(`/dashboard/blogs/${data.data.slug}`);
+      } else {
+        toast.error("Failed to create blog. Reason: " + data?.message, {
+          id: toastId,
+        });
+      }
     } catch (error) {
-      console.error("Failed to create blog post:", error);
+      toast.error("Failed to create Blog. " + (error as any)?.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -75,10 +113,10 @@ const CreateBlogForm = () => {
         );
 
         const data = await res.json();
-        console.log(data);
         return data;
       } catch (error) {
         console.log(error);
+        toast.error("Failed to upload image");
       }
     }
   };
@@ -134,10 +172,19 @@ const CreateBlogForm = () => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="space-y-2">
-                  <FormLabel>Content *</FormLabel>
-                  <FormControl>
-                    <Input type="file" {...field} value={field.value?.name} />
-                  </FormControl>
+                  <FormLabel>Blog Image</FormLabel>
+                  <div className="flex items-center gap-4">
+                    <Input
+                      id="image"
+                      type="file"
+                      accept="image/*"
+                      className="flex-1"
+                      onChange={(e) => field.onChange(e.target.files?.[0])}
+                    />
+                    <Button type="button" variant="outline" size="icon">
+                      <Upload className="h-4 w-4" />
+                    </Button>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -154,9 +201,10 @@ const CreateBlogForm = () => {
               <RHFInput
                 name="readTime"
                 control={form.control}
-                label="Tags *"
+                label="Read Time *"
                 placeholder="Enter read time in minutes"
                 description="(In minutes)"
+                type="number"
               />
             </div>
 

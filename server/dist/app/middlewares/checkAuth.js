@@ -22,20 +22,13 @@ const checkAuth = (...roles) => (0, catchAsync_1.catchAsync)((req, res, next) =>
     if (!accessToken) {
         throw new apiError_1.default(403, "You are not logged in.");
     }
-    ;
-    //   const refreshToken = req.cookies.refreshToken;
-    //   if (!refreshToken) {
-    //     throw new ApiError(403, "You are not logged in.");
-    //   };
     const decoded = (0, jwt_1.verifyJwt)(accessToken, env_1.envVars.JWT_SECRET);
     if (!decoded) {
         throw new apiError_1.default(403, "You are not logged in.");
     }
-    ;
     if (!roles.includes(decoded.role)) {
         throw new apiError_1.default(403, "You are not authorized to access this route.");
     }
-    ;
     req.user = decoded;
     next();
 }));

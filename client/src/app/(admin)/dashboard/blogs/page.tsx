@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,82 +20,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { getBlogs } from "@/lib/fetch-data";
+import DeleteButton from "../projects/delete-button";
 
-export const mockBlogPosts = [
-  {
-    id: "1",
-    slug: "getting-started-with-nextjs",
-    title: "Getting Started with Next.js 15",
-    excerpt:
-      "Learn the fundamentals of Next.js 15 and build your first application",
-    content: `# Getting Started with Next.js 15
-
-Next.js 15 brings exciting new features and improvements. In this guide, we'll explore the basics and build a simple application.
-
-## What's New in Next.js 15
-
-- Improved performance
-- Better developer experience
-- Enhanced routing capabilities
-
-## Building Your First App
-
-Let's start by creating a new Next.js project...`,
-    coverImage: "/nextjs-coding-tutorial.jpg",
-    tags: ["Next.js", "React", "Tutorial"],
-    published: true,
-    createdAt: "2024-01-05",
-    updatedAt: "2024-01-05",
-    readTime: "5 min read",
-  },
-  {
-    id: "2",
-    slug: "typescript-best-practices",
-    title: "TypeScript Best Practices for 2024",
-    excerpt:
-      "Essential TypeScript patterns and practices every developer should know",
-    content: `# TypeScript Best Practices for 2024
-
-TypeScript has become essential for modern web development. Here are the best practices you should follow.
-
-## Type Safety
-
-Always prefer strict type checking...`,
-    coverImage: "/typescript-code-editor.jpg",
-    tags: ["TypeScript", "Best Practices", "Development"],
-    published: true,
-    createdAt: "2024-02-12",
-    updatedAt: "2024-02-12",
-    readTime: "8 min read",
-  },
-  {
-    id: "3",
-    slug: "building-scalable-apis",
-    title: "Building Scalable REST APIs",
-    excerpt:
-      "A comprehensive guide to designing and building scalable API architectures",
-    content: `# Building Scalable REST APIs
-
-Learn how to design APIs that can handle growth and maintain performance.
-
-## API Design Principles
-
-1. Consistency
-2. Versioning
-3. Documentation...`,
-    coverImage: "/api-architecture-diagram.jpg",
-    tags: ["API", "Backend", "Architecture"],
-    published: true,
-    createdAt: "2024-03-01",
-    updatedAt: "2024-03-01",
-    readTime: "10 min read",
-  },
-];
-
-export default function DashboardBlogsPage() {
-  const posts = mockBlogPosts;
+export default async function DashboardBlogsPage() {
+  const res = await getBlogs(
+    {
+      page: "1",
+      limit: "99",
+      sortBy: "createdAt",
+      sortOrder: "desc",
+    },
+    { next: { tags: ["blogs"] } }
+  );
+  const posts = res.data.blogs;
   return (
-    <div className="px-6 py-8">
+    <div className="py-8">
       <div className="mx-auto max-w-7xl space-y-8">
         <div className="flex items-center justify-between">
           <div>
@@ -116,17 +54,19 @@ export default function DashboardBlogsPage() {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
-            <Card key={post.id} className="flex flex-col">
+            <Card key={post._id} className="flex flex-col">
               <img
-                src={post.coverImage || "/placeholder.svg"}
+                src={post.image.url || "/placeholder.svg"}
                 alt={post.title}
                 className="h-48 w-full object-cover"
               />
               <CardHeader>
                 <div className="flex items-start justify-between gap-2">
                   <CardTitle className="line-clamp-1">{post.title}</CardTitle>
-                  <Badge variant={post.published ? "default" : "secondary"}>
-                    {post.published ? "Published" : "Draft"}
+                  <Badge
+                    variant={post.status === "active" ? "default" : "secondary"}
+                  >
+                    {post.status}
                   </Badge>
                 </div>
                 <CardDescription className="line-clamp-2">
@@ -159,33 +99,18 @@ export default function DashboardBlogsPage() {
                       Edit
                     </Link>
                   </Button>
-                  {post.published && (
+                  {post.status === "active" && (
                     <Button variant="outline" size="sm" asChild>
-                      <Link href={`/blog/${post.slug}`} target="_blank">
+                      <Link href={`/blogs/${post.slug}`} target="_blank">
                         <ExternalLink className="h-4 w-4" />
                       </Link>
                     </Button>
                   )}
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="outline" size="sm">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Delete Blog Post</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Are you sure you want to delete "{post.title}"? This
-                          action cannot be undone.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction>Delete</AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  <DeleteButton
+                    slug={post.slug}
+                    title={post.title}
+                    type={"blog"}
+                  />
                 </div>
               </CardContent>
             </Card>

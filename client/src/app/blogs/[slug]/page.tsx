@@ -1,39 +1,44 @@
-"use client";
-
-import type React from "react";
-
-import { useSearchParams } from "next/navigation";
+import { notFound } from "next/navigation";
 import Link from "next/link";
+import {
+  ArrowLeft,
+  Calendar,
+  CalendarDays,
+  Clock,
+  Edit,
+  User,
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+import Image from "next/image";
+import { getBlogBySlug } from "@/lib/fetch-data";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Edit, Calendar, Clock } from "lucide-react";
-import BlogForm from "./blog-form";
-import { IBlog } from "@/types";
-import Image from "next/image";
 
-export default function BlogDetailPage({ post }: { post: IBlog }) {
-  const searchParams = useSearchParams();
-  const isEditMode = searchParams.get("isEditMode") === "true";
+interface BlogDetailPageProps {
+  params: Promise<{
+    slug: string;
+  }>;
+}
 
-  if (isEditMode) {
-    return <BlogForm post={post} />;
+export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
+  const { slug } = await params;
+  const res = await getBlogBySlug(slug, { next: { tags: [slug] } });
+  const blog = res.data;
+
+  if (!blog) {
+    notFound();
   }
 
   return (
-    <div className="py-8">
+    <div className="px-6 py-8">
       <div className="mx-auto max-w-4xl space-y-8">
         <div className="flex items-center justify-between">
           <Button variant="ghost" asChild>
-            <Link href="/dashboard/blogs">
+            <Link href="/blogs">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Blog Posts
-            </Link>
-          </Button>
-          <Button asChild>
-            <Link href={`/dashboard/blogs/${post.slug}?isEditMode=true`}>
-              <Edit className="mr-2 h-4 w-4" />
-              Edit Post
+              Back to Blog blogs
             </Link>
           </Button>
         </div>
@@ -42,29 +47,24 @@ export default function BlogDetailPage({ post }: { post: IBlog }) {
           <div>
             <div className="flex items-center gap-3 mb-2">
               <h1 className="text-balance text-4xl font-bold tracking-tight">
-                {post.title}
+                {blog.title}
               </h1>
-              <Badge
-                variant={post.status === "active" ? "default" : "secondary"}
-              >
-                {post.status}
-              </Badge>
             </div>
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mt-4">
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
                 <time>
-                  {new Date(post.createdAt).toLocaleDateString("en-US", {
+                  {new Date(blog.createdAt).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
                   })}{" "}
                 </time>
               </div>
-              {post.readTime && (
+              {blog.readTime && (
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4" />
-                  <span>{post.readTime} minutes read</span>
+                  <span>{blog.readTime} minutes read</span>
                 </div>
               )}
             </div>
@@ -73,14 +73,14 @@ export default function BlogDetailPage({ post }: { post: IBlog }) {
           <div className="relative aspect-video w-full overflow-hidden rounded-md bg-muted">
             <Image
               fill
-              src={post.image.url || "/placeholder.svg"}
-              alt={post.title}
+              src={blog.image.url || "/placeholder.svg"}
+              alt={blog.title}
               className="w-full rounded-lg object-cover"
             />
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {post.tags.map((tag) => (
+            {blog.tags.map((tag) => (
               <Badge key={tag} variant="secondary">
                 {tag}
               </Badge>
@@ -92,7 +92,7 @@ export default function BlogDetailPage({ post }: { post: IBlog }) {
               <CardTitle>Excerpt</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">{post.excerpt}</p>
+              <p className="text-muted-foreground">{blog.excerpt}</p>
             </CardContent>
           </Card>
 
@@ -104,7 +104,7 @@ export default function BlogDetailPage({ post }: { post: IBlog }) {
               <div className="prose prose-neutral dark:prose-invert max-w-none">
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: post.content.replace(/\n/g, "<br />"),
+                    __html: blog.content.replace(/\n/g, "<br />"),
                   }}
                 />
               </div>

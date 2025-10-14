@@ -1,4 +1,4 @@
-import { Calendar, Clock, MoreVertical, TrendingUp } from "lucide-react";
+import { Calendar, Clock, TrendingUp } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -8,50 +8,25 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import MoreButton from "@/components/more-button";
+import { getBlogs } from "@/lib/fetch-data";
 
-const blogPosts = [
-  {
-    id: 1,
-    title: "Building Scalable React Applications",
-    excerpt:
-      "Learn best practices for structuring large-scale React applications with modern tooling.",
-    category: "Development",
-    date: "2024-03-15",
-    readTime: "8 min read",
-    views: "3.2k",
-    status: "published",
-  },
-  {
-    id: 2,
-    title: "The Future of Web Design",
-    excerpt:
-      "Exploring emerging trends in web design and how they'll shape the digital landscape.",
-    category: "Design",
-    date: "2024-03-10",
-    readTime: "6 min read",
-    views: "2.1k",
-    status: "published",
-  },
-  {
-    id: 3,
-    title: "TypeScript Tips and Tricks",
-    excerpt:
-      "Advanced TypeScript patterns that will make your code more maintainable and type-safe.",
-    category: "Tutorial",
-    date: "2024-03-05",
-    readTime: "10 min read",
-    views: "1.8k",
-    status: "draft",
-  },
-];
+export default async function BlogPosts() {
+  const res = await getBlogs(
+    {
+      page: "1",
+      limit: "5",
+      sortBy: "createdAt",
+      sortOrder: "desc",
+    },
+    {
+      next: {
+        tags: ["blogs"],
+      },
+    }
+  );
 
-export default function BlogPosts() {
+  const blogPosts = res.data.blogs;
   return (
     <Card>
       <CardHeader>
@@ -70,19 +45,14 @@ export default function BlogPosts() {
       <CardContent className="space-y-4">
         {blogPosts.map((post) => (
           <div
-            key={post.id}
+            key={post._id}
             className="group rounded-lg border border-border p-4 transition-all hover:border-primary/50 hover:shadow-sm"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="secondary" className="text-xs">
-                    {post.category}
-                  </Badge>
                   <Badge
-                    variant={
-                      post.status === "published" ? "default" : "secondary"
-                    }
+                    variant={post.status === "active" ? "default" : "secondary"}
                     className="text-xs capitalize"
                   >
                     {post.status}
@@ -99,7 +69,7 @@ export default function BlogPosts() {
                 <div className="flex flex-wrap items-center gap-4 mt-3 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <Calendar className="h-3 w-3" />
-                    {new Date(post.date).toLocaleDateString("en-US", {
+                    {new Date(post.createdAt).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
                       year: "numeric",
@@ -107,7 +77,7 @@ export default function BlogPosts() {
                   </span>
                   <span className="flex items-center gap-1">
                     <Clock className="h-3 w-3" />
-                    {post.readTime}
+                    {post.readTime} minutes read
                   </span>
                   <span className="flex items-center gap-1">
                     <TrendingUp className="h-3 w-3" />
@@ -116,19 +86,7 @@ export default function BlogPosts() {
                 </div>
               </div>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <MoreVertical className="h-4 w-4" />
-                    <span className="sr-only">More options</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Edit</DropdownMenuItem>
-                  <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                  <DropdownMenuItem>Delete</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <MoreButton slug={post.slug} status={post.status} type="blog" />
             </div>
           </div>
         ))}

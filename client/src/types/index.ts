@@ -28,7 +28,7 @@ export interface IBlog {
   content: string;
   excerpt: string;
   author: string;
-  tags?: string[];
+  tags: string[];
   image: {
     url: string;
     pub_id: string;
@@ -37,8 +37,8 @@ export interface IBlog {
   views?: number;
   readTime: number;
   status: "active" | "draft" | "archived";
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface IUser {
